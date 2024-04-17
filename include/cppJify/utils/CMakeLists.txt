@@ -5,6 +5,5 @@ target_sources(
         BASE_DIRS
         ${CMAKE_SOURCE_DIR}/include/
         FILES
-        JavaComposer.hpp
-        JniComposer.hpp
+        StringUtils.hpp
 )

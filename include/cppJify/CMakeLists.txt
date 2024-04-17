@@ -1,5 +1,6 @@
-add_subdirectory(composer)
 add_subdirectory(mapper)
+add_subdirectory(composer)
+add_subdirectory(utils)
 
 target_sources(
         ${CPP_JIFY}
@@ -9,4 +10,5 @@ target_sources(
         ${CMAKE_SOURCE_DIR}/include/
         FILES
         CppJify.hpp
+        CppJifyConstants.hpp
 )

@@ -1,9 +1,12 @@
 #pragma once
 
-#include <cppJify/composer/IComposer.hpp>
+#include <cppJify/CppJifyConstants.hpp>
+#include <cppJify/composer/JniComposer.hpp>
 #include <cppJify/mapper/JifyDefaultMapper.hpp>
 #include <set>
 #include <string>
+#include <vector>
+
 namespace cppJify {
 
     /**
@@ -11,45 +14,41 @@ namespace cppJify {
      */
     class CppJify {
         public:
-            /**
-             * TODO:
-             *      - createApi()
-             *      - includeC()
-             *      - finalize()
-             *      - bindFunction should use
-             */
+            explicit CppJify(const std::string& p_basePackage, const std::string& p_baseClassname);
 
+            // TODO this can be used to create methods (given that you enable passing JavaComposers)
             template <class ReturnType, class... Params>
             const CppJify& bindFunction(ReturnType (*func)(Params...),
                                         const std::string& p_actualFuncName,
-                                        const std::string& p_desiredFuncName);
+                                        const std::string& p_desiredFuncName) {
+                const std::string cReturnType = mapper::JifyDefaultMapper<ReturnType>::CType();
+                const std::string jniReturnType = mapper::JifyDefaultMapper<ReturnType>::JniType();
 
-            template <class Classtype> // Create BaseClass of Classbinder, move Classbinder into its own file
-            class ClassBinder {
-                public:
-                    /**
-                     * TODO:
-                     *      - bindMethod
-                     *      - createJavaFile
-                     *      - finalize
-                     *      - bindStaticMethod
-                     */
+                std::vector<std::string> cParamTypes;
+                std::vector<std::string> jniParamTypes;
+                std::string jniIn;
+                std::string jniOut;
+                std::string funcPlaceholder(p_actualFuncName + "(");
 
-                    explicit ClassBinder(const std::string& p_className);
+                int count = 0;
+                ((cParamTypes.push_back(mapper::JifyDefaultMapper<Params>::CType()),
+                  jniParamTypes.push_back(mapper::JifyDefaultMapper<Params>::JniType()),
 
-                    ClassBinder& package(const std::string& p_package);
-                    ClassBinder& import(const std::string& p_import);
+                  jniIn.append(mapper::JifyDefaultMapper<Params>::In(count)),
+                  funcPlaceholder.append(JIFY_PLACEHOLDER_C_ARG).append(std::to_string(count++) + ", ")),
+                 ...);
+                
+                if (!funcPlaceholder.empty()) { funcPlaceholder.erase(funcPlaceholder.length() - 2, 2); }
+                funcPlaceholder.append(")");
 
-                private:
-                    const std::string _className;
-                    const std::string _package;
-                    const composer::IComposer _classComposer;
-            };
+                _jniComposer.composeFuncDecl(p_desiredFuncName, jniReturnType, jniParamTypes);
+                _jniComposer.composeFuncBody(jniIn, mapper::JifyDefaultMapper<ReturnType>::Out(funcPlaceholder));
+
+                return *this;
+            }
 
         private:
-            const std::string _defaultClassName;
-            const composer::IComposer _jniComposer;
-
+            composer::JniComposer _jniComposer;
     };
 
 }  // namespace cppJify

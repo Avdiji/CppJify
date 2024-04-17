@@ -2,58 +2,50 @@
 
 #include <jni.h>
 
-#include <cppJify/CppJify.hpp>
-
-// #include <cppJBind/JniBindConstants.hpp>
-// #include <cppJbind/utils/StringUtils.hpp>
+#include <cppJify/utils/StringUtils.hpp>
+#include <type_traits>
+#include <typeinfo>
 
 namespace cppJify::mapper {
 
     template <class T, class... Additional>
     class JifyDefaultMapper {
         public:
-            static const bool isTemplatedMapper();
+            static const std::string CType() {
+                std::string result(typeid(T).name());
+                utils::replaceAll(result, "class ", "");
+                utils::replaceAll(result, "struct ", "");
 
-            static const std::string CType();
-            static const std::string JniType();
-            static const std::string JavaType();
-            static const std::string BoxedType();
+                return result;
+            }
 
-            static const std::string In(const size_t& p_argId, JNIEnv* env = nullptr);
-            static const std::string Out(const std::string& p_func, JNIEnv* env = nullptr);
-            static const std::string Deref(const size_t& p_argId, JNIEnv* env = nullptr);
+            static const std::string JniType() { return "jlong"; }
+            static const std::string JavaType() { return "long"; }
+            static const std::string BoxedJavaType() { return "Long"; }
 
-            // static void templated(const CppJify::ClassBinder<T>& p_classBinder);
-    }
+            static const std::string In(const size_t& p_argId, JNIEnv* env = nullptr) {
+                return utils::JIFY_TRANSFORM(
+
+                    JIFY_RAW(
+
+                        \t $ctype * $carg = reinterpret_cast<$ctype*>($jarg); \n
+
+                        ),
+                    p_argId, CType());
+            }
+
+            static const std::string Out(const std::string& p_func, JNIEnv* env = nullptr) {
+                return utils::JIFY_TRANSFORM(
+
+                    JIFY_RAW(
+
+                        \n\t $ctype * result = new $ctype($func); \n
+                        \t return reinterpret_cast<jlong>(result); \n
+
+                        ),
+                    p_func, CType());
+            }
+            static const std::string Deref(JNIEnv* env = nullptr) { return "DEREF"; }
+    };
 
 }  // namespace cppJify::mapper
-
-// namespace cppJBind::cppJMapper {
-
-//     template <class... T>
-//     struct JBindMapper {
-
-//             /**
-//              * Method creates a Destructor for T.
-//              *
-//              * By default it creates a destructor for every datatype.
-//              * In order to 'deactivate' it for a specific type make this return an empty string.
-//              *
-//              * @return The destructor for type T.
-//              */
-//             static const std::string Deref(const size_t& p_paramId) {
-//                 return JBIND_JNI_CODE_TRANSFORMER<T>(
-
-//                     JBIND_RAW(
-
-//                         \t $ctype * toDelete = reinterpret_cast<$ctype*>(JBIND_J_ARG); \n
-//                         \t delete toDelete; \n
-
-//                         ),
-//                     p_paramId);
-//             }
-
-//             static const std::string templated() { return "default templated"; }
-//     };
-
-// }  // namespace cppJBind::cppJMapper
