@@ -64,8 +64,6 @@ namespace cppJify::composer {
         std::string funcBody;
         funcBody.append("{\n").append(p_in).append(p_out).append("\n}\n\n");
         _oss << funcBody;
-
-
     }
 
 }  // namespace cppJify::composer

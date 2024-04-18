@@ -6,16 +6,19 @@
 
 void a(int a, char b, float c) {}
 
-int main() {
-    try{
-    using namespace cppJify;
+class Foo {
+    public:
+        Foo() = default;
+};
+Foo getFoo(Foo foo) { return Foo(); }
 
-    CppJify jify("nvd", "Tree");
-    jify.bindFunction(&a, JIFY_RAW(a), "a");
-    // cppyJify::composer::JniComposer jnicomposer;
-    // jnicomposer.finalize();
-    }catch(std::exception &e) {
-        std::cout << e.what() << std::endl;
-    }
+int main() {
+    try {
+        using namespace cppJify;
+
+        CppJify jify("nvd", "Tree");
+        jify.bindFunction(&getFoo, JIFY_RAW(getFoo), "getFoo");
+
+    } catch (std::exception &e) { std::cout << e.what() << std::endl; }
     return 0;
 }

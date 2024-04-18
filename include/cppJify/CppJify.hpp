@@ -2,6 +2,7 @@
 
 #include <cppJify/CppJifyConstants.hpp>
 #include <cppJify/composer/JniComposer.hpp>
+#include <cppJify/jbinder/JavaBinder.hpp>
 #include <cppJify/mapper/JifyDefaultMapper.hpp>
 #include <set>
 #include <string>
@@ -37,18 +38,25 @@ namespace cppJify {
                   jniIn.append(mapper::JifyDefaultMapper<Params>::In(count)),
                   funcPlaceholder.append(JIFY_PLACEHOLDER_C_ARG).append(std::to_string(count++) + ", ")),
                  ...);
-                
+
                 if (!funcPlaceholder.empty()) { funcPlaceholder.erase(funcPlaceholder.length() - 2, 2); }
                 funcPlaceholder.append(")");
 
-                _jniComposer.composeFuncDecl(p_desiredFuncName, jniReturnType, jniParamTypes);
-                _jniComposer.composeFuncBody(jniIn, mapper::JifyDefaultMapper<ReturnType>::Out(funcPlaceholder));
+                // JNI-Binding
+                _jniApi.composeFuncDecl(p_desiredFuncName, jniReturnType, jniParamTypes);
+                _jniApi.composeFuncBody(jniIn, mapper::JifyDefaultMapper<ReturnType>::Out(funcPlaceholder));
+
+                // Java-Base Class Binding
+                // bind method as well as native method.
+                // _javaBase.bindMethod()
 
                 return *this;
             }
 
         private:
-            composer::JniComposer _jniComposer;
+            composer::JniComposer _jniApi;
+            jbinder::JavaBinder _javaBase;
+            // std::set<jbinder::JavaClassBinder> _javaClasses;
     };
 
 }  // namespace cppJify
