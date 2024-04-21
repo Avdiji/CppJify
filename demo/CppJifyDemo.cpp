@@ -2,9 +2,7 @@
 
 #include <cppJify/CppJify.hpp>
 #include <cppJify/CppJifyConstants.hpp>
-#include <iostream>
-
-void a(int a, char b, float c) {}
+#include "delme.cpp"
 
 class Foo {
     public:
@@ -17,7 +15,10 @@ int main() {
         using namespace cppJify;
 
         CppJify jify("nvd", "Tree");
-        jify.bindFunction(&getFoo, JIFY_RAW(getFoo), "getFoo");
+        jify.bindFunction(&a, JIFY_RAW(a), "a");
+        jify.include("C:/Dev_Avdiji/Development/CppJify/demo/delme.cpp");
+
+        jify.generateApi();
 
     } catch (std::exception &e) { std::cout << e.what() << std::endl; }
     return 0;

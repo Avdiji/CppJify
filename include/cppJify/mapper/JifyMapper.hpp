@@ -10,7 +10,7 @@
 namespace cppJify::mapper {
 
     template <class T, class... Additional>
-    class JifyDefaultMapper {
+    class JifyMapper {
         private:
             // Mainly exists to track the Java - Types. Key = CType, Val = JavaType
             static inline std::map<std::string, std::string> _javaTypes = {};

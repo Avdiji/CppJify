@@ -18,13 +18,18 @@ namespace cppJify::composer {
 
             void composeFuncBody(const std::string& p_in, const std::string& p_out);
 
+            [[nodiscard]]
+            std::ostringstream& getOss();
+
+            [[nodiscard]]
+            const std::string& getClassname() const;
+
         private:
             const std::string _javaPackage;
             const std::string _javaClassName;
             std::ostringstream _oss;
 
             std::set<std::string> _functionDeclarations;
-            std::set<std::string> _includes;
     };
 
 }  // namespace cppJify::composer

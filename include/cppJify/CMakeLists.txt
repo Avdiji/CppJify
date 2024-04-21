@@ -1,7 +1,6 @@
 add_subdirectory(mapper)
 add_subdirectory(composer)
 add_subdirectory(utils)
-add_subdirectory(jbinder)
 
 target_sources(
         ${CPP_JIFY}

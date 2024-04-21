@@ -3,7 +3,6 @@
 #include <cppJify/CppJifyConstants.hpp>
 #include <cppJify/composer/JniComposer.hpp>
 #include <cppJify/utils/StringUtils.hpp>
-#include <iostream>
 
 namespace cppJify::composer {
 
@@ -59,11 +58,16 @@ namespace cppJify::composer {
     }
 
     void JniComposer::composeFuncBody(const std::string& p_in, const std::string& p_out) {
-
         // TODO check, whether to build destructor
         std::string funcBody;
         funcBody.append("{\n").append(p_in).append(p_out).append("\n}\n\n");
         _oss << funcBody;
+    }
+
+    std::ostringstream& JniComposer::getOss() { return _oss; }
+
+    const std::string& JniComposer::getClassname() const {
+        return _javaClassName;
     }
 
 }  // namespace cppJify::composer
