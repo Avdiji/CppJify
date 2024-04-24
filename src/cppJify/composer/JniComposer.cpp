@@ -2,59 +2,60 @@
 
 #include <cppJify/CppJifyConstants.hpp>
 #include <cppJify/composer/JniComposer.hpp>
+#include <cppJify/utils/FilesystemUtils.hpp>
 #include <cppJify/utils/StringUtils.hpp>
 
 namespace cppJify::composer {
 
     JniComposer::JniComposer(const std::string& p_javaPackage, const std::string& p_javaClassName)
-        : _javaPackage(p_javaPackage), _javaClassName(p_javaClassName) {}
+        : _javaPackage(p_javaPackage), _javaClassName(p_javaClassName) {
+        include("jni.h");
+        _oss << "\nextern \"C\" {\n";
+    }
+
+    void JniComposer::generateJniApi() {
+        finalize();
+        utils::createFile(_javaPackage, "JNI" + _javaClassName + ".cxx", _oss.str());
+    }
+
+    void JniComposer::finalize() {
+        _oss << "\n}\n";
+        const std::string tmpJniSrc = _oss.str();
+
+        _oss.str("");
+        for (const std::string& include : _includes) { _oss << "#include \"" << include << "\"\n"; }
+        _oss.str(_oss.str() + tmpJniSrc);
+    }
 
     void JniComposer::composeFuncDecl(const std::string& p_funcName,
                                       const std::string& p_jniReturnType,
-                                      const std::vector<std::string>& p_jniParamTypes,
-                                      const bool use_jclass) {
-        // Deconstruct the javaPackage to be usable in JNI
-        std::string jniPackageString = _javaPackage;
-        utils::replaceAll(jniPackageString, ".", "_");
-
-        // Constructor a fitting JNI-Function name
-        std::string jniFuncName;
-        jniFuncName.append(JIFY_JAVA_PREFIX)
-            .append(jniPackageString)
-            .append("_")
+                                      const std::string& p_jniParameterlist) {
+        // Compose function Name (TODO proper suffix)
+        std::string functionName;
+        functionName.append(JIFY_JAVA_PREFIX)
+            .append(_javaPackage)
+            .append(".")
             .append(_javaClassName)
-            .append("_")
-            .append(p_funcName)
-            .append(JIFY_JNI_SUFFIX);
+            .append(".")
+            .append(p_funcName);
+        utils::replaceAll(functionName, ".", "_");
 
-        // Construct the Parameterlist
-        std::string paramList("JNIEnv* env, ");
-        paramList.append(use_jclass ? "jclass cls" : "jobject obj");
-        for (size_t i = 0; i < p_jniParamTypes.size(); ++i) {
-            paramList.append(", ")
-                .append(p_jniParamTypes.at(i))
-                .append(" ")
-                .append(JIFY_PLACEHOLDER_J_ARG)
-                .append(std::to_string(i));
-        }
-
-        // Compose function Signature
-        std::string functionDecl;
-        functionDecl.append("JNIEXPORT ")
+        // Compose JNI function declaration
+        std::string functionDeclaration;
+        functionDeclaration.append("JNIEXPORT ")
             .append(p_jniReturnType)
             .append(" JNICALL ")
-            .append(jniFuncName)
-            .append("(")
-            .append(paramList)
+            .append(functionName)
+            .append("(JNIEnv *env, jclass cls")
+            .append(p_jniParameterlist)
             .append(")");
 
-        // Check duplicate functionss
-        if (_functionDeclarations.count(functionDecl) > 0) {
+        // check for duplicates
+        if (_functionDeclarations.count(functionDeclaration) > 0) {
             throw std::runtime_error("Duplicate function definition!");
         }
 
-        _oss << functionDecl;
-        _functionDeclarations.insert(functionDecl);
+        _oss << functionDeclaration;
     }
 
     void JniComposer::composeFuncBody(const std::string& p_in, const std::string& p_out) {
@@ -66,8 +67,6 @@ namespace cppJify::composer {
 
     std::ostringstream& JniComposer::getOss() { return _oss; }
 
-    const std::string& JniComposer::getClassname() const {
-        return _javaClassName;
-    }
+    const std::string& JniComposer::getClassname() const { return _javaClassName; }
 
 }  // namespace cppJify::composer
