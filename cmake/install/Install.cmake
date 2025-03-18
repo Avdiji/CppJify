@@ -35,6 +35,5 @@ install(
     FILES
     ${CMAKE_INSTALL_PREFIX}/cmake/${CPP_JIFY}Config.cmake
     ${CMAKE_INSTALL_PREFIX}/cmake/${CPP_JIFY}ConfigVersion.cmake
-    ${PROJECT_SOURCE_DIR}/cmake/CppJifyHelper.cmake
     DESTINATION ${CMAKE_INSTALL_PREFIX}/cmake
 )
