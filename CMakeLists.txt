@@ -8,9 +8,11 @@ set(CPP_JIFY CppJify)
 project(${CPP_JIFY})
 
 # Find JNI
-find_package(JNI REQUIRED)
-include_directories(${JNI_INCLUDE_DIRS})
+# find_package(JNI REQUIRED)
+# include_directories(${JNI_INCLUDE_DIRS})
+
+# target_link_libraries(${CPP_JIFY} ${JNI_LIBRARIES})
 
 # Include Dirs
 add_subdirectory(src)
-include(cmake/install/Install.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/install/Install.cmake)
