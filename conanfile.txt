@@ -1,0 +1,6 @@
+[requires]
+# in case i need any dependencies
+
+[generators]
+CMakeDeps
+CMakeToolchain

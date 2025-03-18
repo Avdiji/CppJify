@@ -12,13 +12,18 @@
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "build/${presetName}",
-            "installDir": "install/${presetName}"
+            "installDir": "install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "${sourceDir}/cmake/conan/conan_provider.cmake",
+                "CONAN_INSTALL_ARGS": "--update;--build=missing"
+            }
         },
         {
             "name": "windows",
             "description": "Windows build configuration",
             "hidden": true,
             "displayName": "windows",
+            "inherits": "base",
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
@@ -48,7 +53,6 @@
             "description": "Windows Debug configuration",
             "displayName": "Windows-Debug",
             "inherits": [
-                "base",
                 "debug",
                 "windows"
             ],
@@ -61,7 +65,6 @@
             "description": "Windows Release configuration",
             "displayName": "Windows-Release",
             "inherits": [
-                "base",
                 "release",
                 "windows"
             ],
