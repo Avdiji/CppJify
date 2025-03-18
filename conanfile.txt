@@ -1,5 +1,5 @@
 [requires]
-fmt/11.1.4
+#fmt/11.1.4
 
 [generators]
 CMakeDeps

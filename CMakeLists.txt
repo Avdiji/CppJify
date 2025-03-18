@@ -15,4 +15,8 @@ project(${CPP_JIFY})
 
 # Include Dirs
 add_subdirectory(src)
+add_subdirectory(${PROJECT_SOURCE_DIR}/include include)
+
+
 include(${CMAKE_SOURCE_DIR}/cmake/install/Install.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/dependencies/FindAndLinkDeps.cmake)
