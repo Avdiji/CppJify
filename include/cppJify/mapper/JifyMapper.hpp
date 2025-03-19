@@ -1,6 +1,9 @@
 #pragma once
 
+#include <boost/core/demangle.hpp>
+#include <stdexcept>
 #include <string>
+#include <typeinfo>
 
 namespace cppJify::mapper {
 
@@ -19,28 +22,35 @@ namespace cppJify::mapper {
              *
              * @return The Cpp datatype of T as a string.
              */
-            static const std::string CType() {}
+            static const std::string CType() {
+                std::string mangledName = typeid(T).name();
+                return boost::core::demangle(mangledName);
+            }
 
             /**
-             * @brief The JNI-Type of T (e.g.: std::string -> jstring). Default = long.
+             * @brief The JNI-Type of T (e.g.: std::string -> jstring).
              *
              * @return The JNI datatype of T as a string.
              */
-            static const std::string JniType(){return "jlong"}
+            static const std::string JniType() {
+                throw std::runtime_error("JNI type for: '" + CType() + "' is unknown");
+            }
 
             /**
              * @brief The Java-Type of T (e.g.: std::string -> java.lang.String).
              *
              * @return The Java datatype of T as a string.
              */
-            static const std::string JavaType() {}
+            static const std::string JavaType() {
+                throw std::runtime_error("Java type for: '" + CType() + "' is unknown");
+            }
 
             /**
              * @brief The boxed Java-Type of T (e.g.: int -> Integer).JifyMapper
              *
              * @return The boxed Java datatype of T as a string.
              */
-            static const std::string BoxedJavaType() {}
+            static const std::string BoxedJavaType() { return JavaType(); }
     };
 
 }  // namespace cppJify::mapper
