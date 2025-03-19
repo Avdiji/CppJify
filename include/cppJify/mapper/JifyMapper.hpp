@@ -1,9 +1,9 @@
 #pragma once
 
-#include <boost/core/demangle.hpp>
 #include <stdexcept>
 #include <string>
 #include <typeinfo>
+#include <cppJify/utils/StringUtils.hpp>
 
 namespace cppJify::mapper {
 
@@ -23,8 +23,9 @@ namespace cppJify::mapper {
              * @return The Cpp datatype of T as a string.
              */
             static const std::string CType() {
-                std::string mangledName = typeid(T).name();
-                return boost::core::demangle(mangledName);
+                std::string ctype = typeid(T).name();
+                ctype = utils::replaceAll(ctype, R"(class |struct )", "");
+                return ctype;
             }
 
             /**

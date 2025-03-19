@@ -1,0 +1,2 @@
+add_executable(SimpleDatatypesDemo SimpleDatatypes.cpp)
+target_link_libraries(SimpleDatatypesDemo CppJify)
