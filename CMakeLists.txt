@@ -8,10 +8,10 @@ set(CPP_JIFY CppJify)
 project(${CPP_JIFY})
 
 # Find JNI
-# find_package(JNI REQUIRED)
-# include_directories(${JNI_INCLUDE_DIRS})
-
-# target_link_libraries(${CPP_JIFY} ${JNI_LIBRARIES})
+find_package(JNI REQUIRED)
+include_directories(${JNI_INCLUDE_DIRS})
 
 add_subdirectory(src)
+target_link_libraries(${CPP_JIFY} ${JNI_LIBRARIES})
+
 add_subdirectory(demo)

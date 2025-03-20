@@ -5,11 +5,11 @@ namespace cppJify::mapper::classes {
     
     // Constructor
     StaticClassMapper::StaticClassMapper(const std::string& jpackage, const std::string& jclassname)
-        : _jpackage(jpackage), _jclassname(jclassname) {}
+        : _jPackage(jpackage), _jClassname(jclassname) {}
 
     // Getter
-    const std::string& StaticClassMapper::getJPackage() const { return _jpackage; }
-    const std::string& StaticClassMapper::getJClassName() const { return _jclassname; }
+    const std::string& StaticClassMapper::getJPackage() const { return _jPackage; }
+    const std::string& StaticClassMapper::getJClassName() const { return _jClassname; }
 
     // addJIncludes copy/move
     void StaticClassMapper::addJIncludes(const std::set<std::string>& jincludes) {

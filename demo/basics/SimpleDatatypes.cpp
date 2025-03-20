@@ -1,18 +1,20 @@
 #pragma once
 
+#include <cppJify/mapper/BasicMapper.hpp>
+#include <cppJify/utils/MacroUtils.hpp>
+#include <cppJify/mapper/classes/StaticClassMapper.hpp>
 #include <iostream>
-#include <cppJify/mapper/JifyMapper.hpp>
 #include <vector>
 
-int main() {
-
-    auto ctype = cppJify::mapper::JifyMapper<std::vector<std::string>>::CType();
-    // auto jtype = cppJify::mapper::JifyMapper<std::vector<std::string>>::JavaType();
-
-
-
-    std::cout << ctype << std::endl;
-    // std::cout << jtype << std::endl;
-    return 0;
+int fitor(int a, int b, int c)
+{
+    return 1;
 }
 
+
+int main()
+{
+    auto classmapper = cppJify::mapper::classes::StaticClassMapper("com.myPackage", "myClass");
+    classmapper.mapFunction(fitor, "fitor", "fitor");
+    return 0;
+}

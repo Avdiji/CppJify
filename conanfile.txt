@@ -1,7 +1,5 @@
 [requires]
-
-[options]
-boost/*:header_only=True
+fmt/11.1.4
 
 [generators]
 CMakeDeps

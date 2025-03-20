@@ -1,4 +1,5 @@
 add_subdirectory(mapper)
+add_subdirectory(generator)
 add_subdirectory(utils)
 
 target_sources(

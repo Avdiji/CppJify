@@ -5,7 +5,9 @@
 
 namespace cppJify::utils {
     std::string replaceAll(const std::string& original, const std::string& toReplace, const std::string& replacement) {
-        std::regex pattern(toReplace);
+        std::string escapedToReplace = std::regex_replace(toReplace, std::regex(R"([\$\^\*\+\?\.\(\)\[\]\{\}\\\|])"), R"(\$&)");
+        std::regex pattern(escapedToReplace);
+
         return std::regex_replace(original, pattern, replacement);
     }
 }  // namespace cppJify::utils

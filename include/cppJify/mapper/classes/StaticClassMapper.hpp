@@ -1,16 +1,20 @@
 #pragma once
 
+#include <cppJify/generator/JniGenerator.hpp>
+#include <iostream>
 #include <set>
 #include <string>
 
-namespace cppJify::mapper::classes {
+namespace cppJify::mapper::classes
+{
 
     /**
      * @brief Mapper for Utility-classes, used to map non-member functions only.
      *
      * @author Fitor Avdiji
      */
-    class StaticClassMapper {
+    class StaticClassMapper
+    {
         public:
             /**
              * @brief Constructor
@@ -58,14 +62,18 @@ namespace cppJify::mapper::classes {
             template <class ReturnType, class... Params>
             const StaticClassMapper& mapFunction(ReturnType (*func)(Params...),
                                                  const std::string& cppFunctionName,
-                                                 const std::string& jFunctionName) {
-                // TODO: finish this...
+                                                 const std::string& jFunctionName)
+            {
+                // TODO do something with the result...
+                const std::string fitor = generator::jni::generateFunction<ReturnType, Params...>(
+                    cppFunctionName, jFunctionName, _jPackage, _jClassname);
+                std::cout << fitor << std::endl;
                 return *this;
             }
 
         private:
-            const std::string _jpackage;
-            const std::string _jclassname;
+            const std::string _jPackage;
+            const std::string _jClassname;
 
             std::set<std::string> _jincludes;
     };
