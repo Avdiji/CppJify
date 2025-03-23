@@ -5,16 +5,13 @@
 #include <set>
 #include <string>
 
-namespace cppJify::mapper::classes
-{
+namespace cppJify::mapper::classes {
 
     /**
      * @brief Mapper for Utility-classes, used to map non-member functions only.
      *
-     * @author Fitor Avdiji
      */
-    class StaticClassMapper
-    {
+    class StaticClassMapper {
         public:
             /**
              * @brief Constructor
@@ -23,18 +20,6 @@ namespace cppJify::mapper::classes
              * @param jclassname The name of the generated java-class.
              */
             explicit StaticClassMapper(const std::string& jpackage, const std::string& jclassname);
-
-            /**
-             * @brief Getter
-             * @return The package the java-class belongs to.
-             */
-            const std::string& getJPackage() const;
-
-            /**
-             * @brief Getter
-             * @return The name of the java-class.
-             */
-            const std::string& getJClassName() const;
 
             /**
              * @brief Set the java-classes to be imported.
@@ -62,12 +47,10 @@ namespace cppJify::mapper::classes
             template <class ReturnType, class... Params>
             const StaticClassMapper& mapFunction(ReturnType (*func)(Params...),
                                                  const std::string& cppFunctionName,
-                                                 const std::string& jFunctionName)
-            {
-                // TODO do something with the result...
-                const std::string fitor = generator::jni::generateFunction<ReturnType, Params...>(
-                    cppFunctionName, jFunctionName, _jPackage, _jClassname);
-                std::cout << fitor << std::endl;
+                                                 const std::string& jFunctionName) {
+                const std::string mappedStaticFunction =
+                    generator::jni::generateFunction<ReturnType, Params...>(cppFunctionName, jFunctionName, _jPackage, _jClassname);
+                _mappedFunctions.insert(mappedStaticFunction);
                 return *this;
             }
 
@@ -76,6 +59,7 @@ namespace cppJify::mapper::classes
             const std::string _jClassname;
 
             std::set<std::string> _jincludes;
+            std::set<std::string> _mappedFunctions;
     };
 
 }  // namespace cppJify::mapper::classes

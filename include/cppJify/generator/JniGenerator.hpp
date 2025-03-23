@@ -9,8 +9,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace cppJify::generator::jni
-{
+namespace cppJify::generator::jni {
 
     /**
      * @brief Represents a JNI function parameter.
@@ -18,44 +17,45 @@ namespace cppJify::generator::jni
      * A JNI function parameter consists of:
      *  - `paramType`: The JNI type (e.g., `jint`, `jstring`, etc.).
      *  - `paramName`: The parameter name (e.g., `arg0`, `arg1`).
+     *  - `c_paramType`: The corresponding C++ type.
+     *  - `c_paramName`: The C++ version of the parameter name.
      */
-    struct JniParam
-    {
+    struct JniParam {
             const std::string paramType;
             const std::string paramName;
+
+            const std::string c_paramType;
+            const std::string c_paramName;
     };
 
     /**
-     * @brief Generates a complete JNI function, including the function signature and body.
+     * @brief Generates a complete JNI function.
      *
-     * This function combines the generated JNI function signature and the function body to create
-     * a complete JNI function definition. It utilizes the provided C++ function name, Java function name,
-     * package name, and class name to construct the JNI function.
+     * Combines the JNI function signature and body to create a complete JNI function definition.
+     * Uses the provided function name, package name, and class name to construct the JNI function.
      *
      * @tparam ReturnType The return type of the C++ function.
      * @tparam Params The parameter types of the C++ function.
      *
-     * @param cppFunctionName The actual name of the C++ function to be mapped to JNI.
+     * @param cppFunctionName The C++ function name to map.
      * @param jFunctionName The corresponding Java function name.
-     * @param jPackage The package name of the Java class.
-     * @param jClassname The class name where the Java function resides.
-     *
-     * @return A complete JNI function as a formatted string.
+     * @param jPackage The package name in Java.
+     * @param jClassname The class name in Java.
+     * @return The complete JNI function as a formatted string.
      */
     template <class ReturnType, class... Params>
     std::string generateFunction(const std::string& cppFunctionName,
                                  const std::string& jFunctionName,
                                  const std::string& jPackage,
-                                 const std::string& jClassname)
-    {
+                                 const std::string& jClassname) {
         // signature
         const std::string functionSignature =
             generateFunctionSignature<ReturnType, Params...>(cppFunctionName, jFunctionName, jPackage, jClassname);
 
         // body
-        const std::string functionBody =
-            generateFunctionBody<ReturnType, Params...>(cppFunctionName, jFunctionName, jPackage, jClassname);
+        const std::string functionBody = generateFunctionBody<ReturnType, Params...>(cppFunctionName);
 
+        // result
         return functionSignature + functionBody;
     }
 
@@ -63,27 +63,24 @@ namespace cppJify::generator::jni
     //////////////////////////////////////// FUNCTION SIGNATURE ////////////////////////////////////////
     //////////////////////////////////////// FUNCTION SIGNATURE ////////////////////////////////////////
     /**
-     * @brief Generates a JNI function signature based on C++ function signature.
+     * @brief Generates a JNI function signature.
      *
-     * Generates the JNI function signature, including return type, mangled name,
-     * and parameter list, based on the provided C++ function signature.
+     * Uses the C++ function signature to create a JNI function signature with mangled name and parameter list.
      *
      * @tparam ReturnType The return type of the C++ function.
      * @tparam Params The parameter types of the C++ function.
      *
-     * @param cppFunctionName The name of the original C++ function.
-     * @param jFunctionName The desired name of the Java function.
-     * @param jPackage The Java package where the function resides.
-     * @param jClassname The name of the Java class.
-     *
-     * @return A complete JNI function signature.
+     * @param cppFunctionName The original C++ function name.
+     * @param jFunctionName The desired Java function name.
+     * @param jPackage The package name in Java.
+     * @param jClassname The class name in Java.
+     * @return The formatted JNI function signature.
      */
     template <class ReturnType, class... Params>
     std::string generateFunctionSignature(const std::string& cppFunctionName,
                                           const std::string& jFunctionName,
                                           const std::string& jPackage,
-                                          const std::string& jClassname)
-    {
+                                          const std::string& jClassname) {
         std::string result = blueprints::JIFY_BLUEPRINT_JNI_FUNC_SIGNATURE;
 
         // Replace the return type
@@ -91,18 +88,12 @@ namespace cppJify::generator::jni
         result = utils::replaceAll(result, placeholder::jni::RETURN_TYPE, jniReturnType);
 
         // Generate the function mangled name
-        const std::string jniMangledname = generateJMangledname<Params...>(jFunctionName, jPackage, jClassname);
+        const std::string jniMangledname = generateMangledJNIFuncname<Params...>(jFunctionName, jPackage, jClassname);
         result = utils::replaceAll(result, placeholder::jni::MANGLED_NAME, jniMangledname);
 
         // Generate parameter list
-        std::ostringstream parameterlist;
-        const auto params = generateParams<Params...>();
-        for (size_t i = 0; i < params.size(); ++i)
-        {
-            if (i > 0) { parameterlist << ", "; }
-            parameterlist << params[i].paramType << " " << params[i].paramName;
-        }
-        result = utils::replaceAll(result, placeholder::jni::PARAMS, parameterlist.str());
+        const std::string parameterlist = generateParamList<true, true, Params...>();
+        result = utils::replaceAll(result, placeholder::jni::PARAMS, parameterlist);
 
         return result;
     }
@@ -110,28 +101,22 @@ namespace cppJify::generator::jni
     /**
      * @brief Generates the mangled JNI function name.
      *
-     * Creates the JNI mangled function name for the given Java function, including
-     * the package and class names.
+     * @tparam Params The parameter types for the function.
      *
-     * @tparam Params The parameter types of the Java function.
-     *
-     * @param jFunctionName The desired Java function name.
-     * @param jPackage The Java package.
-     * @param jClassname The Java class name.
+     * @param jFunctionName The Java function name.
+     * @param jPackage The package name in Java.
+     * @param jClassname The class name in Java.
      *
      * @return The mangled JNI function name.
      */
     template <class... Params>
-    std::string generateJMangledname(const std::string& jFunctionName,
-                                     const std::string& jPackage,
-                                     const std::string& jClassname)
-    {
+    std::string generateMangledJNIFuncname(const std::string& jFunctionName, const std::string& jPackage, const std::string& jClassname) {
         const std::string jniStylePackage = utils::replaceAll(jPackage, ".", "_");
         std::ostringstream mangledJFuncname;
         mangledJFuncname << "Java_" << jniStylePackage << "_" << jClassname << "_" << jFunctionName;
 
         std::ostringstream mangledJFuncnameParams;
-        ((mangledJFuncnameParams << generateJManglednameParam<Params>()), ...);
+        ((mangledJFuncnameParams << generateMangledJNIParams<Params>()), ...);
 
         const std::string paramStr = mangledJFuncnameParams.str();
         if (!paramStr.empty()) { mangledJFuncname << "__" << paramStr; }
@@ -140,20 +125,16 @@ namespace cppJify::generator::jni
     }
 
     /**
-     * @brief Generates the JNI mangled name for a single parameter type.
+     * @brief Generates JNI mangled names for parameters.
      *
-     * Converts a given Java type to its corresponding JNI type representation.
-     *
-     * @tparam Param The type of the parameter.
-     *
+     * @tparam Param The parameter type.
      * @return The JNI mangled representation of the parameter.
      */
     template <class Param>
-    std::string generateJManglednameParam()
-    {
-        const std::unordered_map<std::string, std::string> primitiveJToJNITypeMap = {
-            {"void", "V"}, {"boolean", "Z"}, {"byte", "B"},  {"char", "C"},  {"short", "S"},
-            {"int", "I"},  {"long", "J"},    {"float", "F"}, {"double", "D"}};
+    std::string generateMangledJNIParams() {
+        const std::unordered_map<std::string, std::string> primitiveJToJNITypeMap = {{"void", "V"}, {"boolean", "Z"}, {"byte", "B"},
+                                                                                     {"char", "C"}, {"short", "S"},   {"int", "I"},
+                                                                                     {"long", "J"}, {"float", "F"},   {"double", "D"}};
 
         const std::string javaType = mapper::JifyMapper<Param>::JavaType();
         auto it = primitiveJToJNITypeMap.find(javaType);
@@ -184,39 +165,48 @@ namespace cppJify::generator::jni
      * @tparam Params The parameter types of the C++ function.
      *
      * @param cppFunctionName The actual name of the C++ function to be mapped to JNI.
-     * @param jFunctionName The corresponding Java function name.
-     * @param jPackage The package name of the Java class.
-     * @param jClassname The class name where the Java function resides.
      *
      * @return The generated body of the JNI function as a formatted string.
      */
     template <class ReturnType, class... Params>
-    std::string generateFunctionBody(const std::string& cppFunctionName,
-                                     const std::string& jFunctionName,
-                                     const std::string& jPackage,
-                                     const std::string& jClassname)
-    {
+    std::string generateFunctionBody(const std::string& cppFunctionName) {
         std::string result = blueprints::JIFY_BLUEPRINT_JNI_FUNC_BODY;
 
         // JNI -> C++ conversions for all parameter
         int counter = 0;
         std::stringstream paramConversions;
         ((paramConversions << generateParamCConversion<Params>(counter++)), ...);
-
         result = utils::replaceAll(result, placeholder::jni::C_CONVERSIONS, paramConversions.str());
+
+        // insert actual functionname
+        result = utils::replaceAll(result, placeholder::jni::C_FUNCTION_CALL, cppFunctionName);
+
+        // Generate the C-Style parameterlist for the corresponding function
+        const std::string paramList = generateParamList<false, false, Params...>();
+        result = utils::replaceAll(result, placeholder::jni::C_FUNCTION_PARAMLIST, paramList);
 
         return result;
     }
 
-    template<class Param>
+    /**
+     * @brief Generates JNI to C++ parameter conversion code.
+     *
+     * This function generates the necessary C++ code to convert a JNI parameter to a native C++ type.
+     *
+     * @tparam Param The parameter type to be converted.
+     * @param counter The index of the parameter.
+     * @return A string containing the C++ conversion code for the given JNI parameter.
+     */
+    template <class Param>
     std::string generateParamCConversion(const int& counter) {
         JniParam param = generateParam<Param>(counter);
 
         std::ostringstream result;
-        result << mapper::JifyMapper<Param>::CType() << " c" << param.paramName << " = ";
+        result << mapper::JifyMapper<Param>::CType() << " " << param.c_paramName << " = ";
         result << mapper::JifyMapper<Param>::In(param.paramName) << "\n\t";
         return result.str();
     }
+
     //////////////////////////////////////// FUNCTION BODY ////////////////////////////////////////
     //////////////////////////////////////// FUNCTION BODY ////////////////////////////////////////
     //////////////////////////////////////// FUNCTION BODY ////////////////////////////////////////
@@ -231,24 +221,65 @@ namespace cppJify::generator::jni
      * @return A vector of JniParam structures.
      */
     template <class... Params>
-    std::vector<JniParam> generateParams()
-    {
+    const std::vector<JniParam> generateParams() {
         std::vector<JniParam> params;
         int counter = 0;
         (params.push_back(generateParam<Params>(counter++)), ...);
         return params;
     }
 
-      /**
-     * @brief Generates a JniParam instance.
+    /**
+     * @brief Generates a single JniParam instance.
+     *
+     * Creates a JniParam instance containing the JNI and C++ type information for a parameter.
      *
      * @tparam Param The parameter type.
-     *
-     * @return An instasnce of JniParam.
+     * @param counter The index of the parameter.
+     * @return A JniParam instance representing the parameter.
      */
     template <class Param>
-    JniParam generateParam(const int& counter) {
-        return {mapper::JifyMapper<Param>::JniType(), "arg" + std::to_string(counter)};
+    const JniParam generateParam(const int& counter) {
+        // JNI
+        const std::string paramName = "arg" + std::to_string(counter);
+        const std::string paramType = mapper::JifyMapper<Param>::JniType();
+
+        // C
+        const std::string c_paramName = "c" + paramName;
+        const std::string c_paramType = mapper::JifyMapper<Param>::CType();
+
+        return {paramType, paramName, c_paramType, c_paramName};
+    }
+
+    /**
+     * @brief Generates a formatted list of function parameters.
+     *
+     * Generates a string representation of the parameter list, including types and names,
+     * formatted according to JNI or C++ conventions.
+     *
+     * @tparam JNI_STYLE Whether to use JNI style naming.
+     * @tparam WITH_TYPE Whether to include the type in the parameter list.
+     * @tparam Params The parameter types of the function.
+     *
+     * @return A formatted parameter list as a string.
+     */
+    template <bool JNI_STYLE, bool WITH_TYPE, class... Params>
+    const std::string generateParamList() {
+        const std::vector<JniParam> params = generateParams<Params...>();
+
+        // Generate parameter list
+        std::ostringstream parameterlist;
+
+        for (size_t i = 0; i < params.size(); ++i) {
+            if (i > 0) { parameterlist << ", "; }
+
+            const JniParam param = params[i];
+            const std::string paramName = JNI_STYLE ? param.paramName : param.c_paramName;
+            std::string paramType = WITH_TYPE ? (JNI_STYLE ? param.paramType : param.c_paramType) + " " : "";
+
+            parameterlist << paramType << paramName;
+        }
+
+        return parameterlist.str();
     }
 
 }  // namespace cppJify::generator::jni

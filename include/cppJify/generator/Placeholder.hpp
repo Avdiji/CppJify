@@ -16,5 +16,9 @@ namespace cppJify::generator::placeholder::jni
     inline const std::string PARAMS = "$JIFY_JNI_FUNC_PARAMS";
 
     inline const std::string C_CONVERSIONS = "$JIFY_JNI_FUNC_BODY_C_CONVERSIONS";
+    
+    inline const std::string C_FUNCTION_CALL = "$JIFY_JNI_FUNC_BODY_C_FUNCTION_CALL";
+    inline const std::string C_FUNCTION_PARAMLIST = "$JIFY_JNI_FUNC_BODY_C_FUNCTION_PARAMLIST";
+
 
 }  // namespace cppJify::generator::placeholder::jni

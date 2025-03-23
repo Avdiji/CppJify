@@ -50,11 +50,15 @@ namespace cppJify::generator::jni::blueprints
             \n{{\n
             
                 \t{}
+
+                \n\treturn {}({});
             
             \n}}\n
 
         ),
-        placeholder::jni::C_CONVERSIONS
+        placeholder::jni::C_CONVERSIONS,
+        placeholder::jni::C_FUNCTION_CALL,
+        placeholder::jni::C_FUNCTION_PARAMLIST
     );
 
 }  // namespace cppJify::generator::jni::blueprints
