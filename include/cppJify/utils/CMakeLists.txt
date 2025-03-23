@@ -6,5 +6,6 @@ target_sources(
         ${CMAKE_SOURCE_DIR}/include/
         FILES
         StringUtils.hpp
+        FilesystemUtils.hpp
         MacroUtils.hpp
 )

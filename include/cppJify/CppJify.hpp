@@ -38,7 +38,7 @@ namespace cppJify {
              * @param outputPath The filesystem path where the generated files will be stored.
              * @return void
              */
-            const void generateJavaApi(const std::filesystem::path& outputPath);
+            void generateJavaApi(const std::string& outputPath) const;
 
             /**
              * @brief Creates a Java utility class to map non-member C++ functions.

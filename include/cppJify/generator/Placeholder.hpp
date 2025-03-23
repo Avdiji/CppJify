@@ -6,7 +6,7 @@
 /**
  * @brief namespace contains JNI-specific Placeholders for the generator.
  */
-namespace cppJify::generator::placeholder::jni
+namespace cppJify::generator::jni::placeholder
 {
     inline const std::string INCLUDES = "$JIFY_JNI_INCLUDES";
     inline const std::string CODE = "$JIFY_JNI_CODE";
@@ -17,7 +17,7 @@ namespace cppJify::generator::placeholder::jni
 
     inline const std::string C_CONVERSIONS = "$JIFY_JNI_FUNC_BODY_C_CONVERSIONS";
     
-    inline const std::string C_FUNCTION_CALL = "$JIFY_JNI_FUNC_BODY_C_FUNCTION_CALL";
+    inline const std::string C_RETURN_RESULT = "$JIFY_JNI_FUNC_BODY_C_RETURN_RESULT";
     inline const std::string C_FUNCTION_PARAMLIST = "$JIFY_JNI_FUNC_BODY_C_FUNCTION_PARAMLIST";
 
 

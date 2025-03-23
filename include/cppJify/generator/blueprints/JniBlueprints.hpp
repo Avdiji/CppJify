@@ -20,26 +20,26 @@ namespace cppJify::generator::jni::blueprints
     inline const std::string JIFY_BLUEPRINT_JNI_BASE = JIFY_FMT(
         JIFY_RAW(
             #pragma once
-            #include <jni.h>
-            {}
+            \n#include <jni.h>
+            \n\n{}
 
-            extern "C" {{
-                {}
-            }}
+            \nextern "C" {{
+                \n\n{}
+            \n}}
         ),
-        placeholder::jni::INCLUDES,
-        placeholder::jni::CODE
+        placeholder::INCLUDES,
+        placeholder::CODE
     );
 
     // FUNCTION SIGNATURE
     inline const std::string JIFY_BLUEPRINT_JNI_FUNC_SIGNATURE = JIFY_FMT(
         JIFY_RAW(
-            JNIEXPORT {} JNICALL {}(JNIEnv * env, {})
+            \tJNIEXPORT {} JNICALL {}(JNIEnv * env, {})
         ),
             
-        placeholder::jni::RETURN_TYPE,
-        placeholder::jni::MANGLED_NAME,
-        placeholder::jni::PARAMS
+        placeholder::RETURN_TYPE,
+        placeholder::MANGLED_NAME,
+        placeholder::PARAMS
     );
 
     // clang-format on
@@ -47,18 +47,17 @@ namespace cppJify::generator::jni::blueprints
     // FUNCTION BODY
     inline const std::string JIFY_BLUEPRINT_JNI_FUNC_BODY = JIFY_FMT(
         JIFY_RAW(
-            \n{{\n
+            \n\t{{\n
             
-                \t{}
+                \t\t{}
 
-                \n\treturn {}({});
+                \n\t\t{}
             
-            \n}}\n
+            \n\t}}\n
 
         ),
-        placeholder::jni::C_CONVERSIONS,
-        placeholder::jni::C_FUNCTION_CALL,
-        placeholder::jni::C_FUNCTION_PARAMLIST
+        placeholder::C_CONVERSIONS,
+        placeholder::C_RETURN_RESULT
     );
 
 }  // namespace cppJify::generator::jni::blueprints
