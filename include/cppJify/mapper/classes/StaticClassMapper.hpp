@@ -45,12 +45,14 @@ namespace cppJify::mapper::classes {
              * @param jFunctionName The name of the generated java function.
              */
             template <class ReturnType, class... Params>
-            const StaticClassMapper& mapFunction(ReturnType (*func)(Params...),
+            StaticClassMapper& mapFunction(ReturnType (*func)(Params...),
                                                  const std::string& cppFunctionName,
                                                  const std::string& jFunctionName) {
                 const std::string mappedStaticFunction =
                     generator::jni::generateFunction<ReturnType, Params...>(cppFunctionName, jFunctionName, _jPackage, _jClassname);
                 _mappedFunctions.insert(mappedStaticFunction);
+
+                std::cout << mappedStaticFunction << std::endl;
                 return *this;
             }
 
