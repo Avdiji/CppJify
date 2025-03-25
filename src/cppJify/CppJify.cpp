@@ -13,6 +13,7 @@ namespace cppJify {
     void CppJify::generateJavaApi(const std::string& outputPath) const{
         for(const auto& staticClass : _staticClassMapper) {
             staticClass->generateJniFile(outputPath);
+            staticClass->generateJavaFile(outputPath);
         }
     }
 

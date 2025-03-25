@@ -7,6 +7,8 @@ target_sources(
         BASE_DIRS
         ${CMAKE_SOURCE_DIR}/include/
         FILES
+        Generator.hpp
         JniGenerator.hpp
+        JavaGenerator.hpp
         Placeholder.hpp
 )

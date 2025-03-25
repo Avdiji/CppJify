@@ -6,4 +6,5 @@ target_sources(
         ${CMAKE_SOURCE_DIR}/include/
         FILES
         JniBlueprints.hpp
+        JavaBlueprints.hpp
 )

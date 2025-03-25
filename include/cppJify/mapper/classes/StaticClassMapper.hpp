@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cppJify/generator/JavaGenerator.hpp>
 #include <cppJify/generator/JniGenerator.hpp>
 #include <filesystem>
 #include <iostream>
@@ -25,18 +26,32 @@ namespace cppJify::mapper::classes
             explicit StaticClassMapper(const std::string& jpackage, const std::string& jclassname);
 
             /**
-             * @brief Set the java-classes to be imported.
+             * @brief Set Cpp files to be included.
              *
              * @param cincludes A set of all the c-includes for this class.
              */
             void addCIncludes(const std::set<std::string>& cincludes);
 
             /**
-             * @brief Set the java-classes to be imported.
+             * @brief Set Cpp files to be included.
              *
              * @param cincludes A set of all the c-includes for this class.
              */
             void addCIncludes(std::set<std::string>&& cincludes);
+
+            /**
+             * @brief Set Java-classes to be imported.
+             *
+             * @param A set of all java-imports for this class.
+             */
+            void addJImports(const std::set<std::string>& jimports);
+
+            /**
+             * @brief Set Java-classes to be imported.
+             *
+             * @param A set of all java-imports for this class.
+             */
+            void addJImports(std::set<std::string>&& jimports);
 
             /**
              * Generate the corresponding JNI-File for this class.
@@ -47,6 +62,14 @@ namespace cppJify::mapper::classes
             void generateJniFile(const std::string& outputBase) const;
 
             /**
+             * Generate the corresponding Java-File for this class.
+             * The output path resembles the given java-package structure.
+             *
+             * @param outputBase The base-directory of the output.
+             */
+            void generateJavaFile(const std::string& outputBase) const;
+
+            /**
              * Generate a string of all jni-functions to be mapped for this class.
              *
              * @return A string of all mapped Jni-functions.
@@ -54,11 +77,25 @@ namespace cppJify::mapper::classes
             const std::string getAllJniFunctions() const;
 
             /**
+             * Generate a string of all java-functions to be mapped for this class.
+             *
+             * @return A string of all mapped java-functions.
+             */
+            const std::string getAllJavaFunctions() const;
+
+            /**
              * Generate a string of all jni-includes for this class.
              *
              * @return A string of all includes.
              */
             const std::string getAllIncludes() const;
+
+            /**
+             * Generate a string of all java-imports for this class.
+             *
+             * @return A string of all imports.
+             */
+            const std::string getAllImports() const;
 
             /**
              * @brief Method maps non-member Cpp-functions to Java.
@@ -71,14 +108,17 @@ namespace cppJify::mapper::classes
              */
             template <class ReturnType, class... Params>
             StaticClassMapper& mapNonMemberFunc(ReturnType (*func)(Params...),
-                                           const std::string& cppFunctionName,
-                                           const std::string& jFunctionName)
+                                                const std::string& cppFunctionName,
+                                                const std::string& jFunctionName,
+                                                const std::string& accessSpecifier = "public")
             {
-                const std::string mappedStaticFunction =
-                    generator::jni::generateFunction<ReturnType, Params...>(cppFunctionName, jFunctionName, _jPackage, _jClassname);
-                _mappedFunctionsJNI.insert(mappedStaticFunction);
+                // create JNI-Func
+                _mappedFunctionsJNI.insert(
+                    generator::jni::generateFunction<ReturnType, Params...>(cppFunctionName, jFunctionName, _jPackage, _jClassname));
 
-                // TODO same for java
+                // create Java-Func
+                _mappedFunctionsJava.insert(
+                    generator::java::generateFunctionSignature<true, true, ReturnType, Params...>(jFunctionName, accessSpecifier));
 
                 return *this;
             }
@@ -89,6 +129,9 @@ namespace cppJify::mapper::classes
 
             std::set<std::string> _cincludes;
             std::set<std::string> _mappedFunctionsJNI;
+
+            std::set<std::string> _jimports;
+            std::set<std::string> _mappedFunctionsJava;
     };
 
 }  // namespace cppJify::mapper::classes
