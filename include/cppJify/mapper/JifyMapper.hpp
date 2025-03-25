@@ -52,12 +52,12 @@ namespace cppJify::mapper {
             /**
              * @brief The code conversion of Java -> JNI -> C++.
              */
-            static const std::string In(const std::string& paramName) { return JIFY_RAW(TODO map this properly) }
+            static const std::string In(const std::string& paramName) { return JIFY_RAW(TODO map this properly); }
 
             /**
              * @brief The code conversion of C++ -> JNI -> JAVA.
              */
-            static const std::string Out(const std::string& functionCall) { return JIFY_RAW(TODO map this properly) }
+            static const std::string Out(const std::string& functionCall) { return JIFY_RAW(TODO map this properly); }
     };
 
 }  // namespace cppJify::mapper

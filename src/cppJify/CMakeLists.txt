@@ -8,6 +8,5 @@ include(${CMAKE_SOURCE_DIR}/cmake/install/CppJifyInstall.cmake)
 find_package(fmt REQUIRED)
 target_link_libraries(${CPP_JIFY} fmt::fmt)
 
-
 add_subdirectory(mapper)
 add_subdirectory(utils)

@@ -41,5 +41,6 @@ install(
     FILES
     ${CMAKE_BINARY_DIR}/cmake/${CPP_JIFY}Config.cmake
     ${CMAKE_BINARY_DIR}/cmake/${CPP_JIFY}ConfigVersion.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/CppJifyHelper.cmake
     DESTINATION cmake
 )

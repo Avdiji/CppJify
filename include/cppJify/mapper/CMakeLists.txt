@@ -8,4 +8,5 @@ target_sources(
         ${CMAKE_SOURCE_DIR}/include/
         FILES
         JifyMapper.hpp
+        BasicMapper.hpp
 )
