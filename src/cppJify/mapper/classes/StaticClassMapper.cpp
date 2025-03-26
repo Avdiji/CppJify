@@ -42,7 +42,7 @@ namespace cppJify::mapper::classes
         const std::string fullPath = outputBase + packagePath;
 
         // create filename
-        const std::string filename = _jClassname + ".jni" + ".cpp";
+        const std::string filename = _jClassname + ".cppjify" + ".cpp";
 
         // compose all mapped jni-functions
         std::string content = generator::jni::blueprints::JIFY_BLUEPRINT_JNI_BASE;

@@ -1,2 +1,5 @@
-add_executable(SimpleDatatypesDemo SimpleDatatypes.cpp)
-target_link_libraries(SimpleDatatypesDemo CppJify)
+
+find_package(CppJify)
+create_jify_target(SimpleDatatypesDemo SimpleDatatypes.cpp out)
+create_jify_jar(SimpleDatatypesDemoJar SimpleDatatypesDemo out CppJify)
+

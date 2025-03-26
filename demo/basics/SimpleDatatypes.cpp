@@ -8,12 +8,19 @@
 
 namespace foo {
 
-
+    int getInt(int a) { return a + 1; }
 
 }
 
 int main()
 {
     
+    cppJify::CppJify jify;
+    auto cls = jify.createUtilsClass("Demopackage", "Democlass");
+
+    cls->addCIncludes({JIFY_RAW("../../../../../../demo/basics/SimpleDatatypes.cpp")});
+    cls->mapNonMemberFunc(foo::getInt, JIFY_RAW(foo::getInt), "getInt");
+
+    jify.generateJavaApi("base");
     return 0;
 }
