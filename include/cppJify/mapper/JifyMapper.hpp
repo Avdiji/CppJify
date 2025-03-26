@@ -51,11 +51,16 @@ namespace cppJify::mapper {
 
             /**
              * @brief The code conversion of Java -> JNI -> C++.
+             * 
+             * @param paramName The name of the jni parameter to be converted.
+             * @param identifier An Identifier in order to enable more complex mapping without generating duplicate names.
              */
-            static const std::string In(const std::string& paramName) { return JIFY_RAW(TODO map this properly); }
+            static const std::string In(const std::string& paramName, const std::string& identifier) { return JIFY_RAW(TODO map this properly); }
 
             /**
              * @brief The code conversion of C++ -> JNI -> JAVA.
+             * 
+             * @param functionCall The native function-call returning the C++ type.
              */
             static const std::string Out(const std::string& functionCall) { return JIFY_RAW(TODO map this properly); }
     };

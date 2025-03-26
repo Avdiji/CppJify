@@ -196,7 +196,7 @@ namespace cppJify::generator::jni
 
         std::ostringstream result;
         result << mapper::JifyMapper<Param>::CType() << " " << param.c_paramName << " = ";
-        result << mapper::JifyMapper<Param>::In(param.paramName) << "\n\t\t";
+        result << mapper::JifyMapper<Param>::In(param.paramName, std::to_string(counter)) << "\n\t\t";
         return result.str();
     }
 

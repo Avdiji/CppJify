@@ -10,7 +10,11 @@ namespace cppJify::mapper
     const std::string JifyMapper<int>::JniType() { return "jint"; }
     const std::string JifyMapper<int>::JavaType() { return "int"; }
     const std::string JifyMapper<int>::BoxedJavaType() { return "Integer"; }
-    const std::string JifyMapper<int>::In(const std::string& paramName) { return JIFY_FMT(JIFY_RAW(static_cast<int>({});), paramName); }
+    
+    const std::string JifyMapper<int>::In(const std::string& paramName, const std::string& identifier) { 
+        return JIFY_FMT(JIFY_RAW(static_cast<int>({});), paramName); 
+    }
+    
     const std::string JifyMapper<int>::Out(const std::string& functionCall)
     {
         return JIFY_FMT(JIFY_RAW(return static_cast<jint>({});), functionCall);
