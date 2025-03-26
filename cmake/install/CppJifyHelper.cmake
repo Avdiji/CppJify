@@ -1,16 +1,16 @@
 # Define a function to create a new target and execute it
-function(create_jify_target target_name mapper_main)
+function(create_jify_target target_name mapper_main path_to_jify_includes)
     
     find_package(fmt REQUIRED)
     find_package(JNI REQUIRED)
     include_directories(${JNI_INCLUDE_DIRS})
-    include_directories(${CPP_JIFY_INCLUDE_DIRS})
 
     add_executable(${target_name} ${mapper_main})
-    target_link_libraries(${target_name} PUBLIC ${CPP_JIFY})
+    target_link_libraries(${target_name} PUBLIC CppJify)
     target_link_libraries(${target_name} PUBLIC fmt::fmt)
     target_link_libraries(${target_name} PUBLIC ${JNI_LIBRARIES})
 
+    target_include_directories(${target_name} PUBLIC ${path_to_jify_includes})
 
 endfunction()
 
