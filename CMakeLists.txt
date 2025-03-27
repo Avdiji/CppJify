@@ -11,6 +11,7 @@ project(${CPP_JIFY})
 find_package(JNI REQUIRED)
 include_directories(${JNI_INCLUDE_DIRS})
 
-# Include Dirs
 add_subdirectory(src)
-include(cmake/install/Install.cmake)
+target_link_libraries(${CPP_JIFY} ${JNI_LIBRARIES})
+
+add_subdirectory(demo)

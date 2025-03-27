@@ -1,6 +1,4 @@
-add_subdirectory(mapper)
-add_subdirectory(generator)
-add_subdirectory(utils)
+add_subdirectory(classes)
 
 target_sources(
         ${CPP_JIFY}
@@ -9,5 +7,6 @@ target_sources(
         BASE_DIRS
         ${CMAKE_SOURCE_DIR}/include/
         FILES
-        CppJify.hpp
+        JifyMapper.hpp
+        BasicMapper.hpp
 )

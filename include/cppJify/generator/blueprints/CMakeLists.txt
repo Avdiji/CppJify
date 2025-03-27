@@ -1,7 +1,3 @@
-add_subdirectory(mapper)
-add_subdirectory(generator)
-add_subdirectory(utils)
-
 target_sources(
         ${CPP_JIFY}
         PUBLIC FILE_SET
@@ -9,5 +5,6 @@ target_sources(
         BASE_DIRS
         ${CMAKE_SOURCE_DIR}/include/
         FILES
-        CppJify.hpp
+        JniBlueprints.hpp
+        JavaBlueprints.hpp
 )
