@@ -127,11 +127,11 @@ namespace cppJify::mapper::classes
             const std::string _jPackage;
             const std::string _jClassname;
 
-            std::set<std::string> _cincludes;
-            std::set<std::string> _mappedFunctionsJNI;
+            std::set<std::string> _cincludes = {};
+            std::set<std::string> _mappedFunctionsJNI = {};
 
-            std::set<std::string> _jimports;
-            std::set<std::string> _mappedFunctionsJava;
+            std::set<std::string> _jimports = {};
+            std::set<std::string> _mappedFunctionsJava = {};
     };
 
 }  // namespace cppJify::mapper::classes

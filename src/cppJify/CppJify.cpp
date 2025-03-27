@@ -1,5 +1,10 @@
 #include <cppJify/CppJify.hpp>
 
+#include <cppJify/mapper/classes/StaticClassMapper.hpp>
+
+#include <memory>
+#include <string>
+
 namespace cppJify {
 
     std::shared_ptr<mapper::classes::StaticClassMapper> CppJify::createUtilsClass(const std::string& jPackage,

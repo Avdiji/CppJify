@@ -16,7 +16,7 @@ AllowShortIfStatementsOnASingleLine: true
 AllowShortLoopsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: true
 
-BreakBeforeBraces: Allman  # Force Allman style for braces (new line)
+# BreakBeforeBraces: Allman  # Force Allman style for braces (new line)
 
 MacroBlockBegin: 'QUERY_BEGIN'
 MacroBlockEnd: 'QUERY_END'
