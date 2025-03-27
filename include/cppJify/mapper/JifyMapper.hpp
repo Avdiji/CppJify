@@ -5,7 +5,8 @@
 #include <string>
 #include <typeinfo>
 
-namespace cppJify::mapper {
+namespace cppJify::mapper
+{
 
     /**
      * @brief Template for all typemapings. Use this class to define custom mappings.
@@ -14,14 +15,16 @@ namespace cppJify::mapper {
      *
      */
     template <class T, class... Additional>
-    class JifyMapper {
+    class JifyMapper
+    {
         public:
             /**
              * @brief Method corresponds to the Cpp-Type of T.
              *
              * @return The Cpp datatype of T as a string.
              */
-            static const std::string CType() {
+            static const std::string CType()
+            {
                 // TODO ensure that the return value is being demangled properly...
                 std::string ctype = typeid(T).name();
                 ctype = utils::replaceAll(ctype, R"(class |struct )", "");
@@ -51,15 +54,18 @@ namespace cppJify::mapper {
 
             /**
              * @brief The code conversion of Java -> JNI -> C++.
-             * 
+             *
              * @param paramName The name of the jni parameter to be converted.
              * @param identifier An Identifier in order to enable more complex mapping without generating duplicate names.
              */
-            static const std::string In(const std::string& paramName, const std::string& identifier) { return JIFY_RAW(TODO map this properly); }
+            static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id)
+            {
+                return JIFY_RAW(TODO map this properly);
+            }
 
             /**
              * @brief The code conversion of C++ -> JNI -> JAVA.
-             * 
+             *
              * @param functionCall The native function-call returning the C++ type.
              */
             static const std::string Out(const std::string& functionCall) { return JIFY_RAW(TODO map this properly); }

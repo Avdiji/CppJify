@@ -29,7 +29,7 @@ namespace cppJify::generator::jni
      * @param jClassname The class name in Java.
      * @return The complete JNI function as a formatted string.
      */
-    template <class ReturnType, class... Params>
+    template <bool IsStatic, class ReturnType, class... Params>
     std::string generateFunction(const std::string& cppFunctionName,
                                  const std::string& jFunctionName,
                                  const std::string& jPackage,
@@ -37,7 +37,7 @@ namespace cppJify::generator::jni
     {
         // signature
         const std::string functionSignature =
-            generateFunctionSignature<ReturnType, Params...>(cppFunctionName, jFunctionName, jPackage, jClassname);
+            generateFunctionSignature<IsStatic, ReturnType, Params...>(cppFunctionName, jFunctionName, jPackage, jClassname);
 
         // body
         const std::string functionBody = generateFunctionBody<ReturnType, Params...>(cppFunctionName);
@@ -63,7 +63,7 @@ namespace cppJify::generator::jni
      * @param jClassname The class name in Java.
      * @return The formatted JNI function signature.
      */
-    template <class ReturnType, class... Params>
+    template <bool IsStatic, class ReturnType, class... Params>
     std::string generateFunctionSignature(const std::string& cppFunctionName,
                                           const std::string& jFunctionName,
                                           const std::string& jPackage,
@@ -71,6 +71,7 @@ namespace cppJify::generator::jni
     {
         // Get the JNI-Function signature blueprint
         std::string result = blueprints::JIFY_BLUEPRINT_JNI_FUNC_SIGNATURE;
+        result = utils::replaceAll(result, placeholder::IS_STATIC, (IsStatic ? "jclass clazz," : ""));
 
         // Replace the return type
         const std::string jniReturnType = mapper::JifyMapper<ReturnType>::JniType();
@@ -193,10 +194,11 @@ namespace cppJify::generator::jni
     std::string generateParamCConversion(const int& counter)
     {
         FunctionParam param = generateParam<Param>(counter);
-
         std::ostringstream result;
-        result << mapper::JifyMapper<Param>::CType() << " " << param.c_paramName << " = ";
-        result << mapper::JifyMapper<Param>::In(param.paramName, std::to_string(counter)) << "\n\t\t";
+        
+        const std::string cVar = mapper::JifyMapper<Param>::CType() + " " + param.c_paramName;
+        result << mapper::JifyMapper<Param>::In(cVar, param.paramName, std::to_string(counter)) << "\n\t\t";
+        
         return result.str();
     }
 

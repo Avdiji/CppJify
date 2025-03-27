@@ -114,7 +114,7 @@ namespace cppJify::mapper::classes
             {
                 // create JNI-Func
                 _mappedFunctionsJNI.insert(
-                    generator::jni::generateFunction<ReturnType, Params...>(cppFunctionName, jFunctionName, _jPackage, _jClassname));
+                    generator::jni::generateFunction<true, ReturnType, Params...>(cppFunctionName, jFunctionName, _jPackage, _jClassname));
 
                 // create Java-Func
                 _mappedFunctionsJava.insert(

@@ -34,11 +34,12 @@ namespace cppJify::generator::jni::blueprints
     // FUNCTION SIGNATURE
     inline const std::string JIFY_BLUEPRINT_JNI_FUNC_SIGNATURE = JIFY_FMT(
         JIFY_RAW(
-            \tJNIEXPORT {} JNICALL {}(JNIEnv * env, {})
+            \tJNIEXPORT {} JNICALL {}(JNIEnv * env, {} {})
         ),
             
         placeholder::RETURN_TYPE,
         placeholder::MANGLED_NAME,
+        placeholder::IS_STATIC,
         placeholder::PARAMS
     );
 

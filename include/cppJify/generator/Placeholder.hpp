@@ -13,6 +13,7 @@ namespace cppJify::generator::jni::placeholder
 
     inline const std::string RETURN_TYPE = "$JIFY_JNI_FUNC_RETURN_TYPE";
     inline const std::string MANGLED_NAME = "$JIFY_JNI_FUNC_MANGLED_NAME";
+    inline const std::string IS_STATIC = "$JIFY_JNI_FUNC_IS_STATIC";
     inline const std::string PARAMS = "$JIFY_JNI_FUNC_PARAMS";
 
     inline const std::string C_CONVERSIONS = "$JIFY_JNI_FUNC_BODY_C_CONVERSIONS";
