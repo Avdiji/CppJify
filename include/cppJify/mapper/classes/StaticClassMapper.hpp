@@ -23,7 +23,7 @@ namespace cppJify::mapper::classes
              * @param jpackage The package of the generated java-class.
              * @param jclassname The name of the generated java-class.
              */
-            explicit StaticClassMapper(const std::string& jpackage, const std::string& jclassname);
+            explicit StaticClassMapper(std::string jpackage, std::string jclassname);
 
             /**
              * @brief Set Cpp files to be included.
@@ -74,28 +74,28 @@ namespace cppJify::mapper::classes
              *
              * @return A string of all mapped Jni-functions.
              */
-            const std::string getAllJniFunctions() const;
+            std::string getAllJniFunctions() const;
 
             /**
              * Generate a string of all java-functions to be mapped for this class.
              *
              * @return A string of all mapped java-functions.
              */
-            const std::string getAllJavaFunctions() const;
+            std::string getAllJavaFunctions() const;
 
             /**
              * Generate a string of all jni-includes for this class.
              *
              * @return A string of all includes.
              */
-            const std::string getAllIncludes() const;
+            std::string getAllIncludes() const;
 
             /**
              * Generate a string of all java-imports for this class.
              *
              * @return A string of all imports.
              */
-            const std::string getAllImports() const;
+            std::string getAllImports() const;
 
             /**
              * @brief Method maps non-member Cpp-functions to Java.

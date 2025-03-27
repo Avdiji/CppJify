@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cppJify/utils/FilesystemUtils.hpp>
 #include <filesystem>
 #include <fstream>

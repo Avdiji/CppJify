@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cppJify/utils/StringUtils.hpp>
 #include <regex>
 
