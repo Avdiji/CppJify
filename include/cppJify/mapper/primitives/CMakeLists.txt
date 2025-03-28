@@ -12,4 +12,5 @@ target_sources(
         IntMapper.hpp
         LongMapper.hpp
         ShortMapper.hpp
+        StringMapper.hpp
 )

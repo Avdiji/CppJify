@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cppJify/mapper/BasicMapper.hpp>
 #include <cppJify/mapper/classes/StaticClassMapper.hpp>
 #include <filesystem>
 #include <memory>
