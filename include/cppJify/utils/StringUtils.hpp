@@ -14,4 +14,12 @@ namespace cppJify::utils {
      */
     std::string replaceAll(const std::string& original, const std::string& toReplace, const std::string& replacement);
 
+    /**
+     * Count the occurences of a substring within a string
+     * 
+     * @param string The string containing the substring.
+     * @param substring The substring to count the occurences of.
+     */
+    unsigned int countSubstringInString(const std::string& string, const std::string& substring);
+
 }  // namespace cppJify::utils

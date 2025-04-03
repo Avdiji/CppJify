@@ -29,6 +29,7 @@ namespace cppJify::blueprints::jni {
         JIFY_RAW(
             {}
             \n#include <jni.h>
+            \n#include "{}"
             \n\n{}
 
             \nextern "C" {{
@@ -38,6 +39,7 @@ namespace cppJify::blueprints::jni {
             \n}}
         ),
         "#pragma once",
+        placeholder::CPPJIFY_BASE_INCLUDE_PATH,
         placeholder::INCLUDES,
         placeholder::CUSTOM_CODE,
         placeholder::CODE

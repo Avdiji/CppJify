@@ -8,6 +8,7 @@
  */
 namespace cppJify::blueprints::jni::placeholder {
     inline const std::string INCLUDES = "$JIFY_JNI_INCLUDES";
+    inline const std::string CPPJIFY_BASE_INCLUDE_PATH = "$JIFY_BASE_INCLUDE_PATH";
     inline const std::string CUSTOM_CODE = "$JIFY_JNI_CUTOM_CODE";
     inline const std::string CODE = "$JIFY_JNI_CODE";
 
