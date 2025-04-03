@@ -1,5 +1,3 @@
-add_subdirectory(blueprints)
-
 target_sources(
         ${CPP_JIFY}
         PUBLIC FILE_SET
@@ -10,5 +8,4 @@ target_sources(
         Generator.hpp
         JniGenerator.hpp
         JavaGenerator.hpp
-        Placeholder.hpp
 )

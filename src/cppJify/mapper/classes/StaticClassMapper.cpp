@@ -1,6 +1,6 @@
-#include <cppJify/generator/Placeholder.hpp>
-#include <cppJify/generator/blueprints/JavaBlueprints.hpp>
-#include <cppJify/generator/blueprints/JniBlueprints.hpp>
+#include <cppJify/blueprints/JavaBlueprints.hpp>
+#include <cppJify/blueprints/JniBlueprints.hpp>
+#include <cppJify/blueprints/Placeholder.hpp>
 #include <cppJify/mapper/classes/StaticClassMapper.hpp>
 #include <cppJify/utils/FilesystemUtils.hpp>
 #include <cppJify/utils/StringUtils.hpp>
@@ -50,10 +50,10 @@ namespace cppJify::mapper::classes {
         const std::string filename = _jClassname + ".cppjify" + ".cpp";
 
         // compose all mapped jni-functions
-        std::string content = generator::jni::blueprints::JIFY_BLUEPRINT_JNI_BASE;
-        content = utils::replaceAll(content, generator::jni::placeholder::INCLUDES, getAllIncludes());
-        content = utils::replaceAll(content, generator::jni::placeholder::CUSTOM_CODE, getAllCustomJniCode());
-        content = utils::replaceAll(content, generator::jni::placeholder::CODE, getAllJniFunctions());
+        std::string content = blueprints::jni::JIFY_BLUEPRINT_JNI_BASE;
+        content = utils::replaceAll(content, blueprints::jni::placeholder::INCLUDES, getAllIncludes());
+        content = utils::replaceAll(content, blueprints::jni::placeholder::CUSTOM_CODE, getAllCustomJniCode());
+        content = utils::replaceAll(content, blueprints::jni::placeholder::CODE, getAllJniFunctions());
 
         // create the jni file for the class
         utils::createFile(filename, content, fullPath);
@@ -88,12 +88,12 @@ namespace cppJify::mapper::classes {
         const std::string filename = _jClassname + ".java" + "";
 
         // compose all mapped jni-functions
-        std::string content = generator::java::blueprints::JIFY_BLUEPRINT_JAVA_STATIC_CLASS_BASE;
+        std::string content = blueprints::java::JIFY_BLUEPRINT_JAVA_STATIC_CLASS_BASE;
 
-        content = utils::replaceAll(content, generator::java::placeholder::PACKAGE, _jPackage);
-        content = utils::replaceAll(content, generator::java::placeholder::IMPORTS, getAllImports());
-        content = utils::replaceAll(content, generator::java::placeholder::CLASS_NAME, _jClassname);
-        content = utils::replaceAll(content, generator::java::placeholder::CLASS_BODY, getAllJavaFunctions());
+        content = utils::replaceAll(content, blueprints::java::placeholder::PACKAGE, _jPackage);
+        content = utils::replaceAll(content, blueprints::java::placeholder::IMPORTS, getAllImports());
+        content = utils::replaceAll(content, blueprints::java::placeholder::CLASS_NAME, _jClassname);
+        content = utils::replaceAll(content, blueprints::java::placeholder::CLASS_BODY, getAllJavaFunctions());
 
         utils::createFile(filename, content, fullPath);
     }

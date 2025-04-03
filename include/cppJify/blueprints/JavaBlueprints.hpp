@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cppJify/generator/Placeholder.hpp>
+#include <cppJify/blueprints/Placeholder.hpp>
 #include <cppJify/utils/MacroUtils.hpp>
 #include <string>
 
@@ -9,8 +9,19 @@
  * Those snippets contain certain placeholders, which will be replaced by proper Java-Code.
  * The Blueprints work in conjunction with the JifyMapper.
  */
-namespace cppJify::generator::java::blueprints
-{
+namespace cppJify::blueprints::java {
+
+    // clang-format off
+    // BASE CPPJIFY INTERFACE
+    inline const std::string JIFY_BLUEPRINT_JAVA_CPPJIFY_BASE_INTERFACE = JIFY_RAW(
+        package com.cppjify;
+
+        \n\npublic interface CppJifyBase {
+        
+        \n}
+    );
+
+
     // BASE FOR UTILS-CLASS
     inline const std::string JIFY_BLUEPRINT_JAVA_STATIC_CLASS_BASE = JIFY_FMT(
         JIFY_RAW(
@@ -24,6 +35,7 @@ namespace cppJify::generator::java::blueprints
                 \n{}
             \n}}
         ),
+
         placeholder::PACKAGE,
         placeholder::IMPORTS,
         placeholder::CLASS_NAME,
@@ -45,4 +57,4 @@ namespace cppJify::generator::java::blueprints
     );
     // clang-format on
 
-}  // namespace cppJify::generator::java::blueprints
+}  // namespace cppJify::blueprints::java

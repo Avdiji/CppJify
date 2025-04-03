@@ -2,7 +2,7 @@
 
 #include <jni.h>
 
-#include <cppJify/generator/Placeholder.hpp>
+#include <cppJify/blueprints/Placeholder.hpp>
 #include <cppJify/utils/MacroUtils.hpp>
 #include <string>
 
@@ -11,10 +11,18 @@
  * Those snippets contain certian placeholders, which will be replaced by proper JNI-Code.
  * The Blueprints work in conjunction with the JifyMapper.
  */
-namespace cppJify::generator::jni::blueprints
-{
+namespace cppJify::blueprints::jni {
 
     // clang-format off
+
+    // Base CPPJIFY-File...
+    inline const std::string JIFY_BLUEPRINT_CPPJIFY_BASE = JIFY_FMT(
+        JIFY_RAW(
+            {}
+            \n// Custom code here
+        ),
+        "#pragma once"
+    );
 
     // BASE
     inline const std::string JIFY_BLUEPRINT_JNI_BASE = JIFY_FMT(
@@ -47,7 +55,6 @@ namespace cppJify::generator::jni::blueprints
         placeholder::PARAMS
     );
 
-    // clang-format on
 
     // FUNCTION BODY
     inline const std::string JIFY_BLUEPRINT_JNI_FUNC_BODY = JIFY_FMT(
@@ -65,4 +72,6 @@ namespace cppJify::generator::jni::blueprints
         placeholder::C_RETURN_RESULT
     );
 
-}  // namespace cppJify::generator::jni::blueprints
+    // clang-format on
+
+}  // namespace cppJify::blueprints::jni

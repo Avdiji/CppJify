@@ -1,3 +1,4 @@
+add_subdirectory(blueprints)
 add_subdirectory(mapper)
 add_subdirectory(generator)
 add_subdirectory(utils)

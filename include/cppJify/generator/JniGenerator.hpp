@@ -1,7 +1,8 @@
 #pragma once
 
-#include <cppJify/generator/Placeholder.hpp>
-#include <cppJify/generator/blueprints/JniBlueprints.hpp>
+#include <cppJify/blueprints/JniBlueprints.hpp>
+#include <cppJify/blueprints/Placeholder.hpp>
+#include <cppJify/generator/Generator.hpp>
 #include <cppJify/mapper/JifyMapper.hpp>
 #include <cppJify/utils/StringUtils.hpp>
 #include <sstream>
@@ -9,10 +10,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include <cppJify/generator/Generator.hpp>
-
-namespace cppJify::generator::jni
-{
+namespace cppJify::generator::jni {
 
     /**
      * @brief Generates a complete JNI function.
@@ -33,8 +31,7 @@ namespace cppJify::generator::jni
     std::string generateFunction(const std::string& cppFunctionName,
                                  const std::string& jFunctionName,
                                  const std::string& jPackage,
-                                 const std::string& jClassname)
-    {
+                                 const std::string& jClassname) {
         // signature
         const std::string functionSignature =
             generateFunctionSignature<IsStatic, ReturnType, Params...>(cppFunctionName, jFunctionName, jPackage, jClassname);
@@ -67,23 +64,22 @@ namespace cppJify::generator::jni
     std::string generateFunctionSignature(const std::string& cppFunctionName,
                                           const std::string& jFunctionName,
                                           const std::string& jPackage,
-                                          const std::string& jClassname)
-    {
+                                          const std::string& jClassname) {
         // Get the JNI-Function signature blueprint
-        std::string result = blueprints::JIFY_BLUEPRINT_JNI_FUNC_SIGNATURE;
-        result = utils::replaceAll(result, placeholder::IS_STATIC, (IsStatic ? "jclass clazz," : ""));
+        std::string result = blueprints::jni::JIFY_BLUEPRINT_JNI_FUNC_SIGNATURE;
+        result = utils::replaceAll(result, blueprints::jni::placeholder::IS_STATIC, (IsStatic ? "jclass clazz," : ""));
 
         // Replace the return type
         const std::string jniReturnType = mapper::JifyMapper<ReturnType>::JniType();
-        result = utils::replaceAll(result, placeholder::RETURN_TYPE, jniReturnType);
+        result = utils::replaceAll(result, blueprints::jni::placeholder::RETURN_TYPE, jniReturnType);
 
         // Generate the function mangled name
         const std::string jniMangledname = generateMangledJNIFuncname<Params...>(jFunctionName, jPackage, jClassname);
-        result = utils::replaceAll(result, placeholder::MANGLED_NAME, jniMangledname);
+        result = utils::replaceAll(result, blueprints::jni::placeholder::MANGLED_NAME, jniMangledname);
 
         // Generate parameter list
         const std::string parameterlist = generateParamList<LANGUAGE_TYPE::JNI, true, Params...>();
-        result = utils::replaceAll(result, placeholder::PARAMS, parameterlist);
+        result = utils::replaceAll(result, blueprints::jni::placeholder::PARAMS, parameterlist);
 
         return result;
     }
@@ -100,8 +96,7 @@ namespace cppJify::generator::jni
      * @return The mangled JNI function name.
      */
     template <class... Params>
-    std::string generateMangledJNIFuncname(const std::string& jFunctionName, const std::string& jPackage, const std::string& jClassname)
-    {
+    std::string generateMangledJNIFuncname(const std::string& jFunctionName, const std::string& jPackage, const std::string& jClassname) {
         // JNI-Conventions
         const std::string jniStylePackage = utils::replaceAll(jPackage, ".", "_");
         std::ostringstream mangledJFuncname;
@@ -125,8 +120,7 @@ namespace cppJify::generator::jni
      * @return The JNI mangled representation of the parameter.
      */
     template <class Param>
-    std::string generateMangledJNIParams()
-    {
+    std::string generateMangledJNIParams() {
         const std::unordered_map<std::string, std::string> primitiveJToJNITypeMap = {{"void", "V"}, {"boolean", "Z"}, {"byte", "B"},
                                                                                      {"char", "C"}, {"short", "S"},   {"int", "I"},
                                                                                      {"long", "J"}, {"float", "F"},   {"double", "D"}};
@@ -169,19 +163,19 @@ namespace cppJify::generator::jni
      * @return The generated body of the JNI function as a formatted string.
      */
     template <class ReturnType, class... Params>
-    std::string generateFunctionBody(const std::string& cppFunctionName)
-    {
-        std::string result = blueprints::JIFY_BLUEPRINT_JNI_FUNC_BODY;
+    std::string generateFunctionBody(const std::string& cppFunctionName) {
+        std::string result = blueprints::jni::JIFY_BLUEPRINT_JNI_FUNC_BODY;
 
         // JNI -> C++ conversions for all parameter
         int counter = 0;
         std::stringstream paramConversions;
         ((paramConversions << generateParamCConversion<Params>(counter++)), ...);
-        result = utils::replaceAll(result, placeholder::C_CONVERSIONS, paramConversions.str());
+        result = utils::replaceAll(result, blueprints::jni::placeholder::C_CONVERSIONS, paramConversions.str());
 
         // generate return value of the passed returntype
         const std::string functionCall = cppFunctionName + "(" + generateParamList<LANGUAGE_TYPE::C, false, Params...>() + ")";
-        result = utils::replaceAll(result, placeholder::C_RETURN_RESULT, mapper::JifyMapper<ReturnType>::Out(functionCall));
+        result =
+            utils::replaceAll(result, blueprints::jni::placeholder::C_RETURN_RESULT, mapper::JifyMapper<ReturnType>::Out(functionCall));
 
         return result;
     }
@@ -196,14 +190,13 @@ namespace cppJify::generator::jni
      * @return A string containing the C++ conversion code for the given JNI parameter.
      */
     template <class Param>
-    std::string generateParamCConversion(const int& counter)
-    {
+    std::string generateParamCConversion(const int& counter) {
         FunctionParam param = generateParam<Param>(counter);
         std::ostringstream result;
-        
+
         const std::string cVar = mapper::JifyMapper<Param>::CType() + " " + param.c_paramName;
         result << mapper::JifyMapper<Param>::In(cVar, param.paramName, std::to_string(counter)) << "\n\t\t";
-        
+
         return result.str();
     }
 
