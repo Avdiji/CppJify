@@ -9,4 +9,5 @@ namespace cppJify::utils {
 
         return std::regex_replace(original, pattern, replacement);
     }
+
 }  // namespace cppJify::utils

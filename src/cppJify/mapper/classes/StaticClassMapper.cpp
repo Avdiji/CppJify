@@ -18,8 +18,9 @@ namespace cppJify::mapper::classes {
     //////////////////////////////////////// JNI ////////////////////////////////////////
     //////////////////////////////////////// JNI ////////////////////////////////////////
     void StaticClassMapper::addCIncludes(const std::set<std::string>& cincludes) { _cincludes.insert(cincludes.begin(), cincludes.end()); }
-    void StaticClassMapper::addCIncludes(std::set<std::string>&& cincludes) {  // NOLINT(cppcoreguidelines-rvalue-reference-param-not-moved)
-        _cincludes.merge(std::move(cincludes));
+    void StaticClassMapper::appendCustomJniCode(const std::string& customJniCode) { _customJniCode.insert(customJniCode); }
+    void StaticClassMapper::appendCustomJniCode(const std::set<std::string>& customJniCode) {
+        _customJniCode.insert(customJniCode.begin(), customJniCode.end());
     }
 
     std::string StaticClassMapper::getAllJniFunctions() const {
@@ -34,6 +35,12 @@ namespace cppJify::mapper::classes {
         return result.str();
     }
 
+    std::string StaticClassMapper::getAllCustomJniCode() const {
+        std::ostringstream result;
+        for (const auto& customCode : _customJniCode) { result << customCode << "\n"; }
+        return result.str();
+    }
+
     void StaticClassMapper::generateJniFile(const std::string& outputBase) const {
         // create output directory
         const std::string packagePath = "/" + utils::replaceAll(_jPackage, ".", "/");
@@ -45,8 +52,10 @@ namespace cppJify::mapper::classes {
         // compose all mapped jni-functions
         std::string content = generator::jni::blueprints::JIFY_BLUEPRINT_JNI_BASE;
         content = utils::replaceAll(content, generator::jni::placeholder::INCLUDES, getAllIncludes());
+        content = utils::replaceAll(content, generator::jni::placeholder::CUSTOM_CODE, getAllCustomJniCode());
         content = utils::replaceAll(content, generator::jni::placeholder::CODE, getAllJniFunctions());
 
+        // create the jni file for the class
         utils::createFile(filename, content, fullPath);
     }
     //////////////////////////////////////// JNI ////////////////////////////////////////
@@ -57,9 +66,6 @@ namespace cppJify::mapper::classes {
     //////////////////////////////////////// JAVA ////////////////////////////////////////
     //////////////////////////////////////// JAVA ////////////////////////////////////////
     void StaticClassMapper::addJImports(const std::set<std::string>& jimports) { _jimports.insert(jimports.begin(), jimports.end()); }
-    void StaticClassMapper::addJImports(std::set<std::string>&& jimports) {  // NOLINT(cppcoreguidelines-rvalue-reference-param-not-moved)
-        _jimports.merge(std::move(jimports));
-    }
 
     std::string StaticClassMapper::getAllJavaFunctions() const {
         std::ostringstream result;

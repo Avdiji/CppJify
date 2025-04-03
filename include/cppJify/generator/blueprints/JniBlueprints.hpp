@@ -25,10 +25,13 @@ namespace cppJify::generator::jni::blueprints
 
             \nextern "C" {{
                 \n\n{}
+
+                \n\n{}
             \n}}
         ),
         "#pragma once",
         placeholder::INCLUDES,
+        placeholder::CUSTOM_CODE,
         placeholder::CODE
     );
 

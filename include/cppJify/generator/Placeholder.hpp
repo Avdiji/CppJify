@@ -9,6 +9,7 @@
 namespace cppJify::generator::jni::placeholder
 {
     inline const std::string INCLUDES = "$JIFY_JNI_INCLUDES";
+    inline const std::string CUSTOM_CODE = "$JIFY_JNI_CUTOM_CODE";
     inline const std::string CODE = "$JIFY_JNI_CODE";
 
     inline const std::string RETURN_TYPE = "$JIFY_JNI_FUNC_RETURN_TYPE";
