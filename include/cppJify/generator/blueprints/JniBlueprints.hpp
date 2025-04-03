@@ -19,7 +19,7 @@ namespace cppJify::generator::jni::blueprints
     // BASE
     inline const std::string JIFY_BLUEPRINT_JNI_BASE = JIFY_FMT(
         JIFY_RAW(
-            #pragma once
+            {}
             \n#include <jni.h>
             \n\n{}
 
@@ -27,6 +27,7 @@ namespace cppJify::generator::jni::blueprints
                 \n\n{}
             \n}}
         ),
+        "#pragma once",
         placeholder::INCLUDES,
         placeholder::CODE
     );

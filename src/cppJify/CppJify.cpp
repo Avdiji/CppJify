@@ -1,5 +1,9 @@
-#pragma once
 #include <cppJify/CppJify.hpp>
+
+#include <cppJify/mapper/classes/StaticClassMapper.hpp>
+
+#include <memory>
+#include <string>
 
 namespace cppJify {
 

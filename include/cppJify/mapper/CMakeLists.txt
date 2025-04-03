@@ -1,4 +1,5 @@
 add_subdirectory(classes)
+add_subdirectory(primitives)
 
 target_sources(
         ${CPP_JIFY}

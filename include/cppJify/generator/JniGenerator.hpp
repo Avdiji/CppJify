@@ -131,13 +131,18 @@ namespace cppJify::generator::jni
                                                                                      {"char", "C"}, {"short", "S"},   {"int", "I"},
                                                                                      {"long", "J"}, {"float", "F"},   {"double", "D"}};
 
-        const std::string javaType = mapper::JifyMapper<Param>::JavaType();
-        auto it = primitiveJToJNITypeMap.find(javaType);
+        std::string mangledName = mapper::JifyMapper<Param>::JavaType();
+        auto it = primitiveJToJNITypeMap.find(mangledName);
 
         // Check for primitive type
         if (it != primitiveJToJNITypeMap.end()) { return it->second; }
 
-        return "";  // TODO handle other cases...
+        // handle objects
+        mangledName = "L" + utils::replaceAll(mangledName, ".", "_");
+        mangledName.append("_2");
+
+        // TODO handle arrays...
+        return mangledName;
     }
     //////////////////////////////////////// FUNCTION SIGNATURE ////////////////////////////////////////
     //////////////////////////////////////// FUNCTION SIGNATURE ////////////////////////////////////////

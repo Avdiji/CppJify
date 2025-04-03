@@ -73,6 +73,28 @@
             "environment": {
                 "ENVIRONMENT": "Windows Release"
             }
+        },
+        {
+            "name": "windows-debug-linter",
+            "description": "Windows Debug Ninja configuration",
+            "displayName": "Windows-Debug-Linter",
+            "inherits": [
+                "base",
+                "debug"
+            ],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "generator": "Ninja",
+            "environment": {
+                "ENVIRONMENT": "Windows Debug",
+                "ENABLE_JIFY_LINTING": "ENABLE_JIFY_LINTING"
+            },
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
         }
     ]
 }
