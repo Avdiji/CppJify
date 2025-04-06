@@ -8,10 +8,10 @@
 
 namespace cppJify {
 
-    std::shared_ptr<mapper::classes::StaticClassMapper> CppJify::createUtilsClass(const std::string& jPackage,
+    std::shared_ptr<mapper::classes::StaticClassMapper> CppJify::mapUtilsClass(const std::string& jPackage,
                                                                                   const std::string& jClassname) {
         auto mapper = std::make_shared<mapper::classes::StaticClassMapper>(jPackage, jClassname);
-        _staticClassMapper.insert(mapper);
+        _classMapper.insert(mapper);
         return mapper;
     }
 
@@ -22,7 +22,7 @@ namespace cppJify {
         utils::createFile(CPP_JIFY_BASE_JNI_FILENAME, blueprints::jni::JIFY_BLUEPRINT_CPPJIFY_BASE, baseDir);
         utils::createFile("CppJifyBase.java", blueprints::java::JIFY_BLUEPRINT_JAVA_CPPJIFY_BASE_INTERFACE, baseDir);
 
-        for (const auto& staticClass : _staticClassMapper) {
+        for (const auto& staticClass : _classMapper) {
             staticClass->generateJniFile(outputPath);
             staticClass->generateJavaFile(outputPath);
         }

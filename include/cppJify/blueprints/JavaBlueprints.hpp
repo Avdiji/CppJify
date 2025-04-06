@@ -43,6 +43,21 @@ namespace cppJify::blueprints::java {
         placeholder::CLASS_BODY
     );
 
+    // inline const std::string JIFY_BLUEPRINT_JAVA_INSTANCE_CLASS_BASE = JIFY_FMT(
+    //     JIFY_RAW(
+    //         package {};
+
+    //         \n\n{}
+
+    //         \n\npublic class {} implements com.cppjify.CppJifyBase {{
+
+    //         \n}}
+    //     ),
+    //     placeholder::PACKAGE,
+    //     placeholder::IMPORTS,
+    //     placeholder::CLASS_NAME
+    // );
+
     // FUNCTION SIGNATURE
     inline const std::string JIFY_BLUEPRINT_JAVA_FUNC_SIGNATURE = JIFY_FMT(
         JIFY_RAW(

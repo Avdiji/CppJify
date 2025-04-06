@@ -1,4 +1,5 @@
 #include <cppJify/utils/StringUtils.hpp>
+#include <cstddef>
 #include <regex>
 #include <string>
 
@@ -11,7 +12,7 @@ namespace cppJify::utils {
     }
 
     unsigned int countSubstringInString(const std::string& string, const std::string& substring) {
-        if (substring.empty()) return 0;
+        if (substring.empty()) { return 0; }
 
         unsigned int count = 0;
         size_t pos = 0;

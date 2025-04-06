@@ -32,26 +32,26 @@ namespace cppJify {
                  *
                  * @param cincludes A set of all the c-includes for this class.
                  */
-                void addCIncludes(const std::set<std::string>& cincludes);
+                virtual void addCIncludes(const std::set<std::string>& cincludes);
 
                 /**
                  * @brief Append Customized JNI code, which will be added on top of the generated file.
                  * @param customJniCode The custom code as a collection of strings.
                  */
-                void appendCustomJniCode(const std::set<std::string>& customJniCode);
+                virtual void appendCustomJniCode(const std::set<std::string>& customJniCode);
 
                 /**
                  * @brief Append customized JNI code, which will be added on top of the generated file.
                  * @param customJniCode The custom code as a string.
                  */
-                void appendCustomJniCode(const std::string& customJniCode);
+                virtual void appendCustomJniCode(const std::string& customJniCode);
 
                 /**
                  * @brief Set Java-classes to be imported.
                  *
                  * @param A set of all java-imports for this class.
                  */
-                void addJImports(const std::set<std::string>& jimports);
+                virtual void addJImports(const std::set<std::string>& jimports);
 
                 /**
                  * Generate the corresponding JNI-File for this class.
@@ -59,7 +59,7 @@ namespace cppJify {
                  *
                  * @param outputBase The base-directory of the output.
                  */
-                void generateJniFile(const std::string& outputBase) const;
+                virtual void generateJniFile(const std::string& outputBase) const;
 
                 /**
                  * Generate the corresponding Java-File for this class.
@@ -67,7 +67,7 @@ namespace cppJify {
                  *
                  * @param outputBase The base-directory of the output.
                  */
-                void generateJavaFile(const std::string& outputBase) const;
+                virtual void generateJavaFile(const std::string& outputBase) const;
 
                 /**
                  * @brief Method maps non-member Cpp-functions to Java.
@@ -79,13 +79,13 @@ namespace cppJify {
                  * @param jFunctionName The name of the generated java function.
                  */
                 template <class ReturnType, class... Params>
-                StaticClassMapper& mapNonMemberFunc(ReturnType (*func)(Params...),
-                                                    const std::string& cppFunctionName,
-                                                    const std::string& jFunctionName,
-                                                    const std::string& accessSpecifier = "public") {
+                StaticClassMapper& mapStaticFunction(ReturnType (*func)(Params...),
+                                                     const std::string& cppFunctionName,
+                                                     const std::string& jFunctionName,
+                                                     const std::string& accessSpecifier = "public") {
                     // create JNI-Func
-                    _mappedFunctionsJNI.insert(generator::jni::generateFunction<true, ReturnType, Params...>(cppFunctionName, jFunctionName,
-                                                                                                             _jPackage, _jClassname));
+                    _mappedFunctionsJNI.insert(generator::jni::generateFunction<std::nullptr_t, ReturnType, Params...>(
+                        cppFunctionName, jFunctionName, _jPackage, _jClassname));
 
                     // create Java-Func
                     _mappedFunctionsJava.insert(
@@ -100,44 +100,44 @@ namespace cppJify {
                  *
                  * @return A string of all mapped Jni-functions.
                  */
-                std::string getAllJniFunctions() const;
+                virtual std::string getAllJniFunctions() const;
 
                 /**
                  * Generate a string of all java-functions to be mapped for this class.
                  *
                  * @return A string of all mapped java-functions.
                  */
-                std::string getAllJavaFunctions() const;
+                virtual std::string getAllJavaFunctions() const;
 
                 /**
                  * Generate a string of all jni-includes for this class.
                  *
                  * @return A string of all includes.
                  */
-                std::string getAllIncludes() const;
+                virtual std::string getAllIncludes() const;
 
                 /**
                  * Generate a string of all java-imports for this class.
                  *
                  * @return A string of all imports.
                  */
-                std::string getAllImports() const;
+                virtual std::string getAllImports() const;
 
                 /**
                  * Generate a string of all custom-jni-code for this class.
                  *
                  * @return A string of all the custom JNI-code.
                  */
-                std::string getAllCustomJniCode() const;
+                virtual std::string getAllCustomJniCode() const;
 
-            private:
+            protected:
                 const std::string _jPackage;
                 const std::string _jClassname;
+                std::set<std::string> _mappedFunctionsJNI = {};
 
+            private:
                 std::set<std::string> _cincludes = {};
                 std::set<std::string> _customJniCode = {};
-
-                std::set<std::string> _mappedFunctionsJNI = {};
 
                 std::set<std::string> _jimports = {};
                 std::set<std::string> _mappedFunctionsJava = {};

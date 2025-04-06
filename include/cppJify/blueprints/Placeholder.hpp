@@ -17,8 +17,9 @@ namespace cppJify::blueprints::jni::placeholder {
     inline const std::string IS_STATIC = "$JIFY_JNI_FUNC_IS_STATIC";
     inline const std::string PARAMS = "$JIFY_JNI_FUNC_PARAMS";
 
-    inline const std::string C_CONVERSIONS = "$JIFY_JNI_FUNC_BODY_C_CONVERSIONS";
+    inline const std::string C_CALLING_TYPE_CONVERSION = "$JIFY_JNI_FUNC_BODDY_C_CALLING_TYPE_CONVERSION";
 
+    inline const std::string C_CONVERSIONS = "$JIFY_JNI_FUNC_BODY_C_CONVERSIONS";
     inline const std::string C_RETURN_RESULT = "$JIFY_JNI_FUNC_BODY_C_RETURN_RESULT";
     inline const std::string C_FUNCTION_PARAMLIST = "$JIFY_JNI_FUNC_BODY_C_FUNCTION_PARAMLIST";
 

@@ -64,12 +64,14 @@ namespace cppJify::blueprints::jni {
             \n\t{{\n
             
                 \t\t{}
+                \n\t\t{}
 
                 \n\t\t{}
             
             \n\t}}\n
 
         ),
+        placeholder::C_CALLING_TYPE_CONVERSION,
         placeholder::C_CONVERSIONS,
         placeholder::C_RETURN_RESULT
     );

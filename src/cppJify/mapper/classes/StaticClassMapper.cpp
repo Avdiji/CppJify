@@ -49,11 +49,9 @@ namespace cppJify::mapper::classes {
         // compute the relative path to the CppJifyBase jni file
         const unsigned int pathSubdirCount = utils::countSubstringInString(packagePath, "/");
         std::string cppjifyBaseJniPath;
-        for(unsigned int i = 0; i < pathSubdirCount; ++i) {
-            cppjifyBaseJniPath.append("../");
-        }
-        cppjifyBaseJniPath.append("internal/" + CPP_JIFY_BASE_JNI_FILENAME);
 
+        for (unsigned int i = 0; i < pathSubdirCount; ++i) { cppjifyBaseJniPath.append("../"); }
+        cppjifyBaseJniPath.append("internal/" + CPP_JIFY_BASE_JNI_FILENAME);
 
         // create filename
         const std::string filename = _jClassname + ".cppjify" + ".cpp";

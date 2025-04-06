@@ -1,11 +1,17 @@
 #pragma once
 
 #include <cppJify/utils/StringUtils.hpp>
+#include <map>
 #include <stdexcept>
 #include <string>
 #include <typeinfo>
 
 namespace cppJify::mapper {
+
+    /**
+     * All registered Custom-Java classes.
+     */
+    inline std::map<std::string, std::string> registeredClasses;
 
     /**
      * @brief Template for all typemapings. Use this class to define custom mappings.
@@ -21,21 +27,35 @@ namespace cppJify::mapper {
              *
              * @return The Cpp datatype of T as a string.
              */
-            static const std::string CType() { throw std::runtime_error("CType type is unknown"); }
+            static const std::string CType() {
+                // TODO make sure this is being demangled properly...
+                std::string result = typeid(T).name();
+                result = utils::replaceAll(result, "\\b(class|struct)\\b", "");
+
+                return result;
+            }
 
             /**
              * @brief The JNI-Type of T (e.g.: std::string -> jstring).
              *
              * @return The JNI datatype of T as a string.
              */
-            static const std::string JniType() { throw std::runtime_error("JNI type is unknown"); }
+            static const std::string JniType() { return jobject; }
+
 
             /**
              * @brief The Java-Type of T (e.g.: std::string -> java.lang.String).
              *
              * @return The Java datatype of T as a string.
              */
-            static const std::string JavaType() { throw std::runtime_error("Java type is unknown"); }
+            static const std::string JavaType() {
+                const std::string cppType = CType();
+                const std::string& registeredJType = registeredClasses[cppType];
+
+                if (registeredJType.empty()) { throw std::runtime_error(cppType + " has not been mapped yet..."); }
+
+                return registeredJType;
+            }
 
             /**
              * @brief The code conversion of Java -> JNI -> C++.

@@ -27,17 +27,17 @@ namespace cppJify::generator::jni {
      * @param jClassname The class name in Java.
      * @return The complete JNI function as a formatted string.
      */
-    template <bool IsStatic, class ReturnType, class... Params>
-    std::string generateFunction(const std::string& cppFunctionName,
-                                 const std::string& jFunctionName,
-                                 const std::string& jPackage,
-                                 const std::string& jClassname) {
+    template <class CallingType, class ReturnType, class... Params>
+    std::string generateFunction(const std::string &cppFunctionName,
+                                 const std::string &jFunctionName,
+                                 const std::string &jPackage,
+                                 const std::string &jClassname) {
         // signature
         const std::string functionSignature =
-            generateFunctionSignature<IsStatic, ReturnType, Params...>(cppFunctionName, jFunctionName, jPackage, jClassname);
+            generateFunctionSignature<CallingType, ReturnType, Params...>(cppFunctionName, jFunctionName, jPackage, jClassname);
 
         // body
-        const std::string functionBody = generateFunctionBody<ReturnType, Params...>(cppFunctionName);
+        const std::string functionBody = generateFunctionBody<CallingType, ReturnType, Params...>(cppFunctionName);
 
         // result
         return functionSignature + functionBody;
@@ -60,14 +60,15 @@ namespace cppJify::generator::jni {
      * @param jClassname The class name in Java.
      * @return The formatted JNI function signature.
      */
-    template <bool IsStatic, class ReturnType, class... Params>
-    std::string generateFunctionSignature(const std::string& cppFunctionName,
-                                          const std::string& jFunctionName,
-                                          const std::string& jPackage,
-                                          const std::string& jClassname) {
+    template <class CallingType, class ReturnType, class... Params>
+    std::string generateFunctionSignature(const std::string &cppFunctionName,
+                                          const std::string &jFunctionName,
+                                          const std::string &jPackage,
+                                          const std::string &jClassname) {
         // Get the JNI-Function signature blueprint
         std::string result = blueprints::jni::JIFY_BLUEPRINT_JNI_FUNC_SIGNATURE;
-        result = utils::replaceAll(result, blueprints::jni::placeholder::IS_STATIC, (IsStatic ? "jclass clazz," : ""));
+        result = utils::replaceAll(result, blueprints::jni::placeholder::IS_STATIC,
+                                   std::is_same_v<CallingType, std::nullptr_t> ? "jclass clazz," : "jobject callingObject");
 
         // Replace the return type
         const std::string jniReturnType = mapper::JifyMapper<ReturnType>::JniType();
@@ -96,7 +97,7 @@ namespace cppJify::generator::jni {
      * @return The mangled JNI function name.
      */
     template <class... Params>
-    std::string generateMangledJNIFuncname(const std::string& jFunctionName, const std::string& jPackage, const std::string& jClassname) {
+    std::string generateMangledJNIFuncname(const std::string &jFunctionName, const std::string &jPackage, const std::string &jClassname) {
         // JNI-Conventions
         const std::string jniStylePackage = utils::replaceAll(jPackage, ".", "_");
         std::ostringstream mangledJFuncname;
@@ -162,8 +163,8 @@ namespace cppJify::generator::jni {
      *
      * @return The generated body of the JNI function as a formatted string.
      */
-    template <class ReturnType, class... Params>
-    std::string generateFunctionBody(const std::string& cppFunctionName) {
+    template <class CallingType, class ReturnType, class... Params>
+    std::string generateFunctionBody(const std::string &cppFunctionName) {
         std::string result = blueprints::jni::JIFY_BLUEPRINT_JNI_FUNC_BODY;
 
         // JNI -> C++ conversions for all parameter
@@ -172,8 +173,14 @@ namespace cppJify::generator::jni {
         ((paramConversions << generateParamCConversion<Params>(counter++)), ...);
         result = utils::replaceAll(result, blueprints::jni::placeholder::C_CONVERSIONS, paramConversions.str());
 
+        // determine whether the function is static or not...
+        const bool isStatic = std::is_same_v<CallingType, std::nullptr_t>;
+        result = utils::replaceAll(result, blueprints::jni::placeholder::C_CALLING_TYPE_CONVERSION,
+                                   isStatic ? "" : "// Convert the calling type asap...");
+
         // generate return value of the passed returntype
-        const std::string functionCall = cppFunctionName + "(" + generateParamList<LANGUAGE_TYPE::C, false, Params...>() + ")";
+        const std::string functionCall = (isStatic ? "" : "nativeCallingObject.") + cppFunctionName + "(" +
+                                         generateParamList<LANGUAGE_TYPE::C, false, Params...>() + ")";
         result =
             utils::replaceAll(result, blueprints::jni::placeholder::C_RETURN_RESULT, mapper::JifyMapper<ReturnType>::Out(functionCall));
 
@@ -190,7 +197,7 @@ namespace cppJify::generator::jni {
      * @return A string containing the C++ conversion code for the given JNI parameter.
      */
     template <class Param>
-    std::string generateParamCConversion(const int& counter) {
+    std::string generateParamCConversion(const int &counter) {
         FunctionParam param = generateParam<Param>(counter);
         std::ostringstream result;
 
