@@ -103,25 +103,11 @@ namespace cppJify {
                 virtual std::string getAllJniFunctions() const;
 
                 /**
-                 * Generate a string of all java-functions to be mapped for this class.
-                 *
-                 * @return A string of all mapped java-functions.
-                 */
-                virtual std::string getAllJavaFunctions() const;
-
-                /**
                  * Generate a string of all jni-includes for this class.
                  *
                  * @return A string of all includes.
                  */
                 virtual std::string getAllIncludes() const;
-
-                /**
-                 * Generate a string of all java-imports for this class.
-                 *
-                 * @return A string of all imports.
-                 */
-                virtual std::string getAllImports() const;
 
                 /**
                  * Generate a string of all custom-jni-code for this class.
@@ -131,16 +117,32 @@ namespace cppJify {
                 virtual std::string getAllCustomJniCode() const;
 
             protected:
+                /**
+                 * Generate a string of all java-imports for this class.
+                 *
+                 * @return A string of all imports.
+                 */
+                virtual std::string getAllImports() const;
+
+                /**
+                 * Generate a string of all java-functions to be mapped for this class.
+                 *
+                 * @return A string of all mapped java-functions.
+                 */
+                virtual std::string getAllJavaFunctions() const;
+
+            protected:
                 const std::string _jPackage;
                 const std::string _jClassname;
+                
                 std::set<std::string> _mappedFunctionsJNI = {};
+                std::set<std::string> _mappedFunctionsJava = {};
 
             private:
                 std::set<std::string> _cincludes = {};
                 std::set<std::string> _customJniCode = {};
 
                 std::set<std::string> _jimports = {};
-                std::set<std::string> _mappedFunctionsJava = {};
         };
 
     }  // namespace mapper::classes
