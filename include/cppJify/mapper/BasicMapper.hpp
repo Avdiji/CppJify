@@ -11,3 +11,4 @@
 #include <cppJify/mapper/primitives/LongMapper.hpp>
 #include <cppJify/mapper/primitives/ShortMapper.hpp>
 #include <cppJify/mapper/primitives/StringMapper.hpp>
+#include <cppJify/mapper/primitives/VoidMapper.hpp>

@@ -13,4 +13,5 @@ target_sources(
         LongMapper.hpp
         ShortMapper.hpp
         StringMapper.hpp
+        VoidMapper.hpp
 )

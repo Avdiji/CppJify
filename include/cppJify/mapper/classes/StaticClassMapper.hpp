@@ -84,7 +84,7 @@ namespace cppJify {
                                                      const std::string& jFunctionName,
                                                      const std::string& accessSpecifier = "public") {
                     // create JNI-Func
-                    _mappedFunctionsJNI.insert(generator::jni::generateFunction<std::nullptr_t, ReturnType, Params...>(
+                    _mappedFunctionsJNI.insert(generator::jni::generateFunction<false, std::nullptr_t, ReturnType, Params...>(
                         cppFunctionName, jFunctionName, _jPackage, _jClassname));
 
                     // create Java-Func
@@ -134,7 +134,7 @@ namespace cppJify {
             protected:
                 const std::string _jPackage;
                 const std::string _jClassname;
-                
+
                 std::set<std::string> _mappedFunctionsJNI = {};
                 std::set<std::string> _mappedFunctionsJava = {};
 

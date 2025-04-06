@@ -17,7 +17,7 @@ namespace cppJify::blueprints::java {
         package com.cppjify;
 
         \n\npublic interface CppJifyBase {
-        
+            \n\t\tlong getNativeHandle;
         \n}
     );
 
@@ -51,11 +51,19 @@ namespace cppJify::blueprints::java {
 
             \n\npublic class {} implements com.cppjify.CppJifyBase {{
                 
+                \n\tprivate long nativeHandle;
+                \n\n\tprivate {}(final long nativeHandle) {{
+                    \n\t\tthis.nativeHandle = nativeHandle;
+                \n\t}}
+
+                \n\n\t@Override 
+                \n\tpublic long getNativeHandle(){{ return this.nativeHandle; }}
                 \n{}
             \n}}
         ),
         placeholder::PACKAGE,
         placeholder::IMPORTS,
+        placeholder::CLASS_NAME,
         placeholder::CLASS_NAME,
         placeholder::CLASS_BODY
 

@@ -3,8 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace cppJify::generator
-{
+namespace cppJify::generator {
 
     /**
      * @brief Represents a JNI function parameter.
@@ -15,8 +14,7 @@ namespace cppJify::generator
      *  - `c_paramType`: The corresponding C++ type.
      *  - `c_paramName`: The C++ version of the parameter name.
      */
-    struct FunctionParam
-    {
+    struct FunctionParam {
             const std::string paramType;
             const std::string paramName;
 
@@ -39,12 +37,7 @@ namespace cppJify::generator
      * - C: Represents the C programming language.
      *
      */
-    enum LANGUAGE_TYPE
-    {
-        JAVA = 0,
-        JNI = 1,
-        C = 2
-    };
+    enum LANGUAGE_TYPE { JAVA = 0, JNI = 1, C = 2 };
 
     /**
      * @brief Generates a list of JNI function parameters.
@@ -56,8 +49,7 @@ namespace cppJify::generator
      * @return A vector of JniParam structures.
      */
     template <class... Params>
-    const std::vector<FunctionParam> generateParams()
-    {
+    const std::vector<FunctionParam> generateParams() {
         std::vector<FunctionParam> params;
         int counter = 0;
         (params.push_back(generateParam<Params>(counter++)), ...);
@@ -74,8 +66,7 @@ namespace cppJify::generator
      * @return A JniParam instance representing the parameter.
      */
     template <class Param>
-    const FunctionParam generateParam(const int& counter)
-    {
+    const FunctionParam generateParam(const int& counter) {
         // JNI
         const std::string paramName = "arg" + std::to_string(counter);
         const std::string paramType = mapper::JifyMapper<Param>::JniType();
@@ -104,15 +95,13 @@ namespace cppJify::generator
      * @return A formatted parameter list as a string.
      */
     template <LANGUAGE_TYPE TYPE, bool WITH_TYPE, class... Params>
-    const std::string generateParamList()
-    {
+    const std::string generateParamList() {
         const std::vector<FunctionParam> params = generateParams<Params...>();
 
         // Generate parameter list
         std::ostringstream parameterlist;
 
-        for (size_t i = 0; i < params.size(); ++i)
-        {
+        for (size_t i = 0; i < params.size(); ++i) {
             if (i > 0) { parameterlist << ", "; }
 
             const FunctionParam param = params[i];

@@ -58,8 +58,8 @@ namespace cppJify::mapper::classes {
                                                 const std::string& jFunctionName,
                                                 const std::string& accessSpecifier = "public") {
                 // create JNI-Func
-                _mappedFunctionsJNI.insert(
-                    generator::jni::generateFunction<T, ReturnType, Params...>(cppFunctionName, jFunctionName, _jPackage, _jClassname));
+                _mappedFunctionsJNI.insert(generator::jni::generateFunction<false, T, ReturnType, Params...>(cppFunctionName, jFunctionName,
+                                                                                                             _jPackage, _jClassname));
 
                 // create Java-Func
                 _mappedFunctionsJava.insert(
@@ -68,6 +68,15 @@ namespace cppJify::mapper::classes {
                 return *this;
             }
 
+            template <class... Params>
+            InstanceClassMapper<T>& constructor() {
+                _mappedFunctionsJNI.insert(
+                    generator::jni::generateFunction<true, std::nullptr_t, T, Params...>("allocate", "allocate", _jPackage, _jClassname));
+
+                // TODO map the java counterpart...
+
+                return *this;
+            }
             // TODO proper constructor mapping...
             // TODO proper java mapping...
             // TODO proper jobject to nativeObject handling...
