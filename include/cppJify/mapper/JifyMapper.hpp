@@ -64,7 +64,17 @@ namespace cppJify::mapper {
              * @param identifier An Identifier in order to enable more complex mapping without generating duplicate names.
              */
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                return "JIFY_RAW(TODO map this properly);";
+
+                return JIFY_FMT(
+                    JIFY_RAW(
+                        jclass cppJifyBaseClass = env->GetObjectClass(callingObject);
+                        \n\t\tjmethodID getNativeHandleMethod = env->GetMethodID(cppJifyBaseClass, "getNativeHandle", "()J");
+
+                        \n\n\t\t{} *nativeCallingObject = reinterpret_cast<{}*>(env->CallLongMethod(callingObject, getNativeHandleMethod));
+                    ),
+                    CType(),
+                    CType()
+                );
             }
 
             /**
@@ -82,16 +92,12 @@ namespace cppJify::mapper {
                     JIFY_RAW(
                         {} *nativeObject = new {}({});
                         \n\t\tjlong nativeHandle = reinterpret_cast<jlong>(nativeObject);
+                        \n\t\treturn nativeHandle;
 
-                        \n\n\t\tjclass resultClass = env->FindClass("{}");
-                        \n\t\tjmethodID ctor = env->GetMethodID(resultClass, "<init>", "(J)V"); 
-                        
-                        \n\n\t\treturn env->NewObject(resultClass, ctor, nativeHandle);
                     ),
                     CType(),
                     CType(),
-                    params,
-                    jname
+                    params
                 );
             }
     };

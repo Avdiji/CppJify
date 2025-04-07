@@ -1,0 +1,4 @@
+1. Make sure objects can be destroyed (deallocated) via the finalize function in conjunction with the close() method.
+2. Check on how to handle functions that receive object by value, ptr, ref
+3. Refactor!!!
+4. Find out how i can properly build this lib (while showing all issues...)

@@ -17,7 +17,7 @@ namespace cppJify::blueprints::java {
         package com.cppjify;
 
         \n\npublic interface CppJifyBase {
-            \n\t\tlong getNativeHandle;
+            \n\tlong getNativeHandle();
         \n}
     );
 
@@ -80,6 +80,16 @@ namespace cppJify::blueprints::java {
         placeholder::FUNC_RETURN_VAL,
         placeholder::FUNC_NAME,
         placeholder::FUNC_PARAMS
+    );
+
+
+    inline const std::string JIFY_BLUEPRINT_JAVA_CONSTRUCTOR_SIGNATURE = JIFY_FMT(
+        JIFY_RAW(
+            \n\tpublic {}({}) {{ nativeHandle = allocate({}); }}
+        ),
+        placeholder::CLASS_NAME,
+        placeholder::FUNC_PARAMS,
+        placeholder::FUNC_PARAMS_NO_TYPE
     );
     // clang-format on
 

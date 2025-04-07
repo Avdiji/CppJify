@@ -33,8 +33,8 @@ namespace cppJify::generator::jni {
                                  const std::string &jPackage,
                                  const std::string &jClassname) {
         // signature
-        const std::string functionSignature =
-            generateFunctionSignature<CallingType, ReturnType, Params...>(cppFunctionName, jFunctionName, jPackage, jClassname);
+        const std::string functionSignature = generateFunctionSignature<IsConstructor, CallingType, ReturnType, Params...>(
+            cppFunctionName, jFunctionName, jPackage, jClassname);
 
         // body
         const std::string functionBody = generateFunctionBody<IsConstructor, CallingType, ReturnType, Params...>(cppFunctionName);
@@ -60,7 +60,7 @@ namespace cppJify::generator::jni {
      * @param jClassname The class name in Java.
      * @return The formatted JNI function signature.
      */
-    template <class CallingType, class ReturnType, class... Params>
+    template <bool IsConstructor, class CallingType, class ReturnType, class... Params>
     std::string generateFunctionSignature(const std::string &cppFunctionName,
                                           const std::string &jFunctionName,
                                           const std::string &jPackage,
@@ -72,7 +72,7 @@ namespace cppJify::generator::jni {
 
         // Replace the return type
         const std::string jniReturnType = mapper::JifyMapper<ReturnType>::JniType();
-        result = utils::replaceAll(result, blueprints::jni::placeholder::RETURN_TYPE, jniReturnType);
+        result = utils::replaceAll(result, blueprints::jni::placeholder::RETURN_TYPE, IsConstructor ? "jlong" : jniReturnType);
 
         // Generate the function mangled name
         const std::string jniMangledname = generateMangledJNIFuncname<Params...>(jFunctionName, jPackage, jClassname);
@@ -177,16 +177,32 @@ namespace cppJify::generator::jni {
         // determine whether the function is static or not...
         const bool isStatic = std::is_same_v<CallingType, std::nullptr_t>;
         result = utils::replaceAll(result, blueprints::jni::placeholder::C_CALLING_TYPE_CONVERSION,
-                                   isStatic ? "" : "// Convert the calling type asap...");
+                                   isStatic ? "" : mapper::JifyMapper<CallingType>::In("", "", ""));
 
         // generate return value of the passed returntype
-        const std::string functionCall = (isStatic ? "" : "nativeCallingObject.") + cppFunctionName + "(" +
+        const std::string functionCall = (isStatic ? "" : "nativeCallingObject->") + cppFunctionName + "(" +
                                          generateParamList<LANGUAGE_TYPE::C, false, Params...>() + ")";
 
-        result =
-            utils::replaceAll(result, blueprints::jni::placeholder::C_RETURN_RESULT,
-                              IsConstructor ? mapper::JifyMapper<ReturnType>::Alloc(generateParamList<LANGUAGE_TYPE::C, false, Params...>())
-                                            : mapper::JifyMapper<ReturnType>::Out(functionCall));
+        if (IsConstructor) {
+            // clang-format off
+            const std::string allocation = JIFY_FMT(
+                JIFY_RAW(
+                    {} *nativeObject = new {}({});
+                    \n\t\tjlong nativeHandle = reinterpret_cast<jlong>(nativeObject);
+                    \n\t\treturn nativeHandle;
+
+                ),
+                mapper::JifyMapper<ReturnType>::CType(),
+                mapper::JifyMapper<ReturnType>::CType(),
+                generateParamList<LANGUAGE_TYPE::C, false, Params...>()
+            );
+            // clang-format on
+            result = utils::replaceAll(result, blueprints::jni::placeholder::C_RETURN_RESULT, allocation);
+
+        } else {
+            result =
+                utils::replaceAll(result, blueprints::jni::placeholder::C_RETURN_RESULT, mapper::JifyMapper<ReturnType>::Out(functionCall));
+        }
 
         return result;
     }

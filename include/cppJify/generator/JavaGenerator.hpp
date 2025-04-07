@@ -34,4 +34,19 @@ namespace cppJify::generator::java {
         return result;
     }
 
+    template<class... Params>
+    std::string generateConstructorSignature(const std::string& jclassname) {
+        std::string result = blueprints::java::JIFY_BLUEPRINT_JAVA_CONSTRUCTOR_SIGNATURE;
+
+        result = utils::replaceAll(result, blueprints::java::placeholder::CLASS_NAME, jclassname);
+
+        const std::string paramsNoType = generateParamList<LANGUAGE_TYPE::JAVA, false, Params...>();
+        const std::string params = generateParamList<LANGUAGE_TYPE::JAVA, true, Params...>();
+
+        result = utils::replaceAll(result, blueprints::java::placeholder::FUNC_PARAMS_NO_TYPE, paramsNoType);
+        result = utils::replaceAll(result, blueprints::java::placeholder::FUNC_PARAMS, params);
+
+        return result;
+    }
+
 }  // namespace cppJify::generator::java

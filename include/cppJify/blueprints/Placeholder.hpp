@@ -38,5 +38,6 @@ namespace cppJify::blueprints::java::placeholder {
     inline const std::string FUNC_RETURN_VAL = "$JIFY_JAVA_FUNC_RETURN_VAL";
     inline const std::string FUNC_NAME = "$JIFY_JAVA_FUNC_NAME";
     inline const std::string FUNC_PARAMS = "$JIFY_JAVA_FUNC_PARAMS";
+    inline const std::string FUNC_PARAMS_NO_TYPE = "$JIFY_JAVA_FUNC_PARAMS_NO_TYPE";
 
 }  // namespace cppJify::blueprints::java::placeholder

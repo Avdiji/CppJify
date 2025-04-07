@@ -73,7 +73,8 @@ namespace cppJify::mapper::classes {
                 _mappedFunctionsJNI.insert(
                     generator::jni::generateFunction<true, std::nullptr_t, T, Params...>("allocate", "allocate", _jPackage, _jClassname));
 
-                // TODO map the java counterpart...
+                _mappedFunctionsJava.insert(generator::java::generateConstructorSignature<Params...>(_jClassname));
+                _mappedFunctionsJava.insert(generator::java::generateFunctionSignature<true, true, long, Params...>("allocate", "private"));
 
                 return *this;
             }
