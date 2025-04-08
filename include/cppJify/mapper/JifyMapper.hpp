@@ -31,8 +31,6 @@ namespace cppJify::mapper {
             static const std::string CType() {
                 // TODO make sure this is being demangled properly...
                 std::string result = typeid(T).name();
-                result = utils::replaceAll(result, R"(\b(class|struct)\b\s*)", "");
-
                 return result;
             }
 
@@ -64,7 +62,7 @@ namespace cppJify::mapper {
              * @param identifier An Identifier in order to enable more complex mapping without generating duplicate names.
              */
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-
+                // TODO make this work with multiple cppJify mappedo objects...
                 return JIFY_FMT(
                     JIFY_RAW(
                         jclass cppJifyBaseClass = env->GetObjectClass(callingObject);
@@ -83,23 +81,6 @@ namespace cppJify::mapper {
              * @param functionCall The native function-call returning the C++ type.
              */
             static const std::string Out(const std::string& functionCall) { return "JIFY_RAW(TODO map this properly);"; }
-
-            static const std::string Alloc(const std::string& params) {
-
-                const std::string jname = utils::replaceAll(JavaType(), ".", "/");
-
-                return JIFY_FMT(
-                    JIFY_RAW(
-                        {} *nativeObject = new {}({});
-                        \n\t\tjlong nativeHandle = reinterpret_cast<jlong>(nativeObject);
-                        \n\t\treturn nativeHandle;
-
-                    ),
-                    CType(),
-                    CType(),
-                    params
-                );
-            }
     };
 
 }  // namespace cppJify::mapper

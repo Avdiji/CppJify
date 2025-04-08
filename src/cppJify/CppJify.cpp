@@ -20,7 +20,7 @@ namespace cppJify {
         utils::ensureDirectory(baseDir);
 
         utils::createFile(CPP_JIFY_BASE_JNI_FILENAME, blueprints::jni::JIFY_BLUEPRINT_CPPJIFY_BASE, baseDir);
-        utils::createFile("CppJifyBase.java", blueprints::java::JIFY_BLUEPRINT_JAVA_CPPJIFY_BASE_INTERFACE, baseDir);
+        utils::createFile("CppJifyBase.java", blueprints::JIFY_BLUEPRINT_JAVA_CPPJIFY_BASE_INTERFACE, baseDir);
 
         for (const auto& staticClass : _classMapper) {
             staticClass->generateJniFile(outputPath);

@@ -23,28 +23,29 @@ namespace cppJify::generator::java {
      */
     template <bool IsStatic, bool IsNative, class ReturnType, class... Params>
     std::string generateFunctionSignature(const std::string& jFunctionName, const std::string& accessSpecifier) {
-        std::string result = blueprints::java::JIFY_BLUEPRINT_JAVA_FUNC_SIGNATURE;
-        result = utils::replaceAll(result, blueprints::java::placeholder::FUNC_ACCESS_SPECIFIER, accessSpecifier);
-        result = utils::replaceAll(result, blueprints::java::placeholder::FUNC_IS_STATIC, (IsStatic ? "static " : ""));
-        result = utils::replaceAll(result, blueprints::java::placeholder::FUNC_IS_NATIVE, (IsNative ? "native " : ""));
-        result = utils::replaceAll(result, blueprints::java::placeholder::FUNC_RETURN_VAL, mapper::JifyMapper<ReturnType>::JavaType());
-        result = utils::replaceAll(result, blueprints::java::placeholder::FUNC_NAME, jFunctionName);
-        result = utils::replaceAll(result, blueprints::java::placeholder::FUNC_PARAMS,
-                                   generateParamList<LANGUAGE_TYPE::JAVA, true, Params...>());
+        std::string result = blueprints::JIFY_BLUEPRINT_JAVA_FUNC_SIGNATURE;
+
+        result = utils::replaceAll(result, blueprints::placeholder::ACCESS_SPECIFIER, accessSpecifier);
+        result = utils::replaceAll(result, blueprints::placeholder::STATIC_SPECIFIER, (IsStatic ? "static " : ""));
+        result = utils::replaceAll(result, blueprints::placeholder::NATIVE_SPECIFIER, (IsNative ? "native " : ""));
+        result = utils::replaceAll(result, blueprints::placeholder::RETURN_VALUE, mapper::JifyMapper<ReturnType>::JavaType());
+        result = utils::replaceAll(result, blueprints::placeholder::FUNCNAME, jFunctionName);
+        result = utils::replaceAll(result, blueprints::placeholder::PARAMS, generateParamList<LANGUAGE_TYPE::JAVA, true, Params...>());
+
         return result;
     }
 
-    template<class... Params>
+    template <class... Params>
     std::string generateConstructorSignature(const std::string& jclassname) {
-        std::string result = blueprints::java::JIFY_BLUEPRINT_JAVA_CONSTRUCTOR_SIGNATURE;
+        std::string result = blueprints::JIFY_BLUEPRINT_JAVA_CONSTRUCTOR_SIGNATURE;
 
-        result = utils::replaceAll(result, blueprints::java::placeholder::CLASS_NAME, jclassname);
+        result = utils::replaceAll(result, blueprints::placeholder::CLASSNAME, jclassname);
+
+        const std::string params = generateParamList<LANGUAGE_TYPE::JAVA, true, Params...>();
+        result = utils::replaceAll(result, blueprints::placeholder::PARAMS, params);
 
         const std::string paramsNoType = generateParamList<LANGUAGE_TYPE::JAVA, false, Params...>();
-        const std::string params = generateParamList<LANGUAGE_TYPE::JAVA, true, Params...>();
-
-        result = utils::replaceAll(result, blueprints::java::placeholder::FUNC_PARAMS_NO_TYPE, paramsNoType);
-        result = utils::replaceAll(result, blueprints::java::placeholder::FUNC_PARAMS, params);
+        result = utils::replaceAll(result, blueprints::placeholder::PARAMS_NO_TYPE, paramsNoType);
 
         return result;
     }

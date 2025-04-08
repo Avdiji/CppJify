@@ -3,9 +3,24 @@
 
 #include <string>
 
-/**
- * @brief namespace contains JNI-specific Placeholders for the generator.
- */
+namespace cppJify::blueprints::placeholder {
+    inline const std::string PACKAGE = "{package}";
+    inline const std::string IMPORTS = "{imports}";
+
+    inline const std::string CLASSNAME = "{classname}";
+    inline const std::string CLASSBODY = "{classbody}";
+
+    inline const std::string ACCESS_SPECIFIER = "{access_specifier}";
+    inline const std::string STATIC_SPECIFIER = "{static_specifier}";
+    inline const std::string NATIVE_SPECIFIER = "{native_specifier}";
+    inline const std::string RETURN_VALUE = "{returnvalue}";
+    inline const std::string FUNCNAME = "{funcname}";
+
+    inline const std::string PARAMS = "{params}";
+    inline const std::string PARAMS_NO_TYPE = "{params_no_type}";
+}
+
+
 namespace cppJify::blueprints::jni::placeholder {
     inline const std::string INCLUDES = "$JIFY_JNI_INCLUDES";
     inline const std::string CPPJIFY_BASE_INCLUDE_PATH = "$JIFY_BASE_INCLUDE_PATH";

@@ -33,12 +33,12 @@ namespace cppJify::mapper::classes {
                 const std::string filename = _jClassname + ".java" + "";
 
                 // compose all mapped jni-functions
-                std::string content = blueprints::java::JIFY_BLUEPRINT_JAVA_INSTANCE_CLASS_BASE;
+                std::string content = blueprints::JIFY_BLUEPRINT_JAVA_INSTANCE_CLASS;
 
-                content = utils::replaceAll(content, blueprints::java::placeholder::PACKAGE, _jPackage);
-                content = utils::replaceAll(content, blueprints::java::placeholder::IMPORTS, getAllImports());
-                content = utils::replaceAll(content, blueprints::java::placeholder::CLASS_NAME, _jClassname);
-                content = utils::replaceAll(content, blueprints::java::placeholder::CLASS_BODY, getAllJavaFunctions());
+                content = utils::replaceAll(content, blueprints::placeholder::PACKAGE, _jPackage);
+                content = utils::replaceAll(content, blueprints::placeholder::IMPORTS, getAllImports());
+                content = utils::replaceAll(content, blueprints::placeholder::CLASSNAME, _jClassname);
+                content = utils::replaceAll(content, blueprints::placeholder::CLASSBODY, getAllJavaFunctions());
 
                 utils::createFile(filename, content, fullPath);
             }
