@@ -11,6 +11,7 @@
  */
 namespace cppJify::blueprints {
     // clang-format off
+
     // Base Java CppJify interface
     inline const std::string JIFY_BLUEPRINT_JAVA_CPPJIFY_BASE_INTERFACE = JIFY_RAW(
         package com.cppjify;
@@ -19,6 +20,7 @@ namespace cppJify::blueprints {
             \n\tlong getNativeHandle();
         \n}
     );
+
 
     // Base for every generated Java-Utils class
     inline const std::string JIFY_BLUEPRINT_JAVA_STATIC_CLASS = JIFY_RAW(
@@ -32,6 +34,7 @@ namespace cppJify::blueprints {
             \n{classbody}
         \n}
     );
+
 
     // Base for every generated Java-Instance class
     inline const std::string JIFY_BLUEPRINT_JAVA_INSTANCE_CLASS = JIFY_RAW(
@@ -47,10 +50,12 @@ namespace cppJify::blueprints {
         \n}
     );
 
+
     // Base for every generated Java function signature
     inline const std::string JIFY_BLUEPRINT_JAVA_FUNC_SIGNATURE = JIFY_RAW(
-        \n\t{access_specifier} {static_specifier}{native_specifier}{returnvalue} {funcname}({params})
+        \n\t{access_specifier} {static_specifier}{native_specifier}{return_type} {funcname}({params})
     );
+
 
     inline const std::string JIFY_BLUEPRINT_JAVA_CONSTRUCTOR_SIGNATURE = JIFY_RAW(
         \n\tpublic {classname}({params}) { nativeHandle = allocate({params_no_type}); }

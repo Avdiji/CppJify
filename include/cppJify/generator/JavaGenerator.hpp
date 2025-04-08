@@ -28,7 +28,7 @@ namespace cppJify::generator::java {
         result = utils::replaceAll(result, blueprints::placeholder::ACCESS_SPECIFIER, accessSpecifier);
         result = utils::replaceAll(result, blueprints::placeholder::STATIC_SPECIFIER, (IsStatic ? "static " : ""));
         result = utils::replaceAll(result, blueprints::placeholder::NATIVE_SPECIFIER, (IsNative ? "native " : ""));
-        result = utils::replaceAll(result, blueprints::placeholder::RETURN_VALUE, mapper::JifyMapper<ReturnType>::JavaType());
+        result = utils::replaceAll(result, blueprints::placeholder::RETURN_TYPE, mapper::JifyMapper<ReturnType>::JavaType());
         result = utils::replaceAll(result, blueprints::placeholder::FUNCNAME, jFunctionName);
         result = utils::replaceAll(result, blueprints::placeholder::PARAMS, generateParamList<LANGUAGE_TYPE::JAVA, true, Params...>());
 

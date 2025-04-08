@@ -15,67 +15,41 @@ namespace cppJify::blueprints::jni {
 
     // clang-format off
 
-    // Base CPPJIFY-File...
-    inline const std::string JIFY_BLUEPRINT_CPPJIFY_BASE = JIFY_FMT(
-        JIFY_RAW(
-            {}
-            \n// Custom code here
-        ),
-        "#pragma once"
+    // The base-file, which will be included into every generated jni file...
+    inline const std::string JIFY_BLUEPRINT_JNI_CPPJIFY_BASE = JIFY_RAW(
+        {pragmaonce}
     );
 
-    // BASE
-    inline const std::string JIFY_BLUEPRINT_JNI_BASE = JIFY_FMT(
-        JIFY_RAW(
-            {}
-            \n#include <jni.h>
-            \n#include "{}"
-            \n\n{}
 
-            \nextern "C" {{
-                \n\n{}
-
-                \n\n{}
-            \n}}
-        ),
-        "#pragma once",
-        placeholder::CPPJIFY_BASE_INCLUDE_PATH,
-        placeholder::INCLUDES,
-        placeholder::CUSTOM_CODE,
-        placeholder::CODE
+    // Base for every generated JNI-file
+    inline const std::string JIFY_BLUEPRINT_JNI_BASE = JIFY_RAW(
+        {pragmaonce}
+    
+        \n\n#include <jni.h>
+        \n#include {cppjify_base_include_path}
+        \n\n{includes}
+    
+        \n\nextern "C" {
+            \n\n{custom_code}
+    
+            \n\n{body}
+        }
     );
 
-    // FUNCTION SIGNATURE
-    inline const std::string JIFY_BLUEPRINT_JNI_FUNC_SIGNATURE = JIFY_FMT(
-        JIFY_RAW(
-            \tJNIEXPORT {} JNICALL {}(JNIEnv * env, {}{})
-        ),
+    // Function signature of every generated JNI-function
+    inline const std::string JIFY_BLUEPRINT_JNI_FUNC_SIGNATURE = JIFY_RAW(
+        \n\tJNIEXPORT {return_type} JNICALL {mangled_funcname}(JNIEnv *env, {static_specifier}{params})
+    );
+
+    // Body of every generated JNI-function
+    inline const std::string JIFY_BLUEPRINT_JNI_FUNC_BODY = JIFY_RAW(
+        \n\t{
+            \n\t\t{calling_type_in_conversion}
+            \n\t\t{conversions_in}
             
-        placeholder::RETURN_TYPE,
-        placeholder::MANGLED_NAME,
-        placeholder::IS_STATIC,
-        placeholder::PARAMS
+            \n\t\t{return_value}
+        \n\t}
     );
-
-
-    // FUNCTION BODY
-    inline const std::string JIFY_BLUEPRINT_JNI_FUNC_BODY = JIFY_FMT(
-        JIFY_RAW(
-            \n\t{{\n
-            
-                \t\t{}
-                \n\t\t{}
-
-                \n\t\t{}
-            
-            \n\t}}\n
-
-        ),
-        placeholder::C_CALLING_TYPE_CONVERSION,
-        placeholder::C_CONVERSIONS,
-        placeholder::C_RETURN_RESULT
-    );
-
     // clang-format on
 
 }  // namespace cppJify::blueprints::jni

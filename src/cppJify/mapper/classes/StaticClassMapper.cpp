@@ -58,10 +58,10 @@ namespace cppJify::mapper::classes {
 
         // compose all mapped jni-functions
         std::string content = blueprints::jni::JIFY_BLUEPRINT_JNI_BASE;
-        content = utils::replaceAll(content, blueprints::jni::placeholder::CPPJIFY_BASE_INCLUDE_PATH, cppjifyBaseJniPath);
-        content = utils::replaceAll(content, blueprints::jni::placeholder::INCLUDES, getAllIncludes());
-        content = utils::replaceAll(content, blueprints::jni::placeholder::CUSTOM_CODE, getAllCustomJniCode());
-        content = utils::replaceAll(content, blueprints::jni::placeholder::CODE, getAllJniFunctions());
+        content = utils::replaceAll(content, blueprints::placeholder::jni::CPPJIFY_BASE_INCLUDE_PATH, cppjifyBaseJniPath);
+        content = utils::replaceAll(content, blueprints::placeholder::jni::INCLUDES, getAllIncludes());
+        content = utils::replaceAll(content, blueprints::placeholder::CUSTOM_CODE, getAllCustomJniCode());
+        content = utils::replaceAll(content, blueprints::placeholder::BODY, getAllJniFunctions());
 
         // create the jni file for the class
         utils::createFile(filename, content, fullPath);
@@ -98,8 +98,8 @@ namespace cppJify::mapper::classes {
         // compose all mapped jni-functions
         std::string content = blueprints::JIFY_BLUEPRINT_JAVA_STATIC_CLASS;
 
-        content = utils::replaceAll(content, blueprints::placeholder::PACKAGE, _jPackage);
-        content = utils::replaceAll(content, blueprints::placeholder::IMPORTS, getAllImports());
+        content = utils::replaceAll(content, blueprints::placeholder::java::PACKAGE, _jPackage);
+        content = utils::replaceAll(content, blueprints::placeholder::java::IMPORTS, getAllImports());
         content = utils::replaceAll(content, blueprints::placeholder::CLASSNAME, _jClassname);
         content = utils::replaceAll(content, blueprints::placeholder::CLASSBODY, getAllJavaFunctions());
 

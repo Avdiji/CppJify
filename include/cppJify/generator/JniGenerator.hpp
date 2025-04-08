@@ -67,20 +67,20 @@ namespace cppJify::generator::jni {
                                           const std::string &jClassname) {
         // Get the JNI-Function signature blueprint
         std::string result = blueprints::jni::JIFY_BLUEPRINT_JNI_FUNC_SIGNATURE;
-        result = utils::replaceAll(result, blueprints::jni::placeholder::IS_STATIC,
+        result = utils::replaceAll(result, blueprints::placeholder::STATIC_SPECIFIER,
                                    std::is_same_v<CallingType, std::nullptr_t> ? "jclass clazz" : "jobject callingObject");
 
         // Replace the return type
         const std::string jniReturnType = mapper::JifyMapper<ReturnType>::JniType();
-        result = utils::replaceAll(result, blueprints::jni::placeholder::RETURN_TYPE, IsConstructor ? "jlong" : jniReturnType);
+        result = utils::replaceAll(result, blueprints::placeholder::RETURN_TYPE, IsConstructor ? "jlong" : jniReturnType);
 
         // Generate the function mangled name
         const std::string jniMangledname = generateMangledJNIFuncname<Params...>(jFunctionName, jPackage, jClassname);
-        result = utils::replaceAll(result, blueprints::jni::placeholder::MANGLED_NAME, jniMangledname);
+        result = utils::replaceAll(result, blueprints::placeholder::MANGLED_FUNCNAME, jniMangledname);
 
         // Generate parameter list
         const std::string parameterlist = generateParamList<LANGUAGE_TYPE::JNI, true, Params...>();
-        result = utils::replaceAll(result, blueprints::jni::placeholder::PARAMS,
+        result = utils::replaceAll(result, blueprints::placeholder::PARAMS,
                                    parameterlist.size() > 0 ? ", " + parameterlist : parameterlist);
 
         return result;
@@ -172,11 +172,11 @@ namespace cppJify::generator::jni {
         int counter = 0;
         std::stringstream paramConversions;
         ((paramConversions << generateParamCConversion<Params>(counter++)), ...);
-        result = utils::replaceAll(result, blueprints::jni::placeholder::C_CONVERSIONS, paramConversions.str());
+        result = utils::replaceAll(result, blueprints::placeholder::jni::CONVERSIONS_IN, paramConversions.str());
 
         // determine whether the function is static or not...
         const bool isStatic = std::is_same_v<CallingType, std::nullptr_t>;
-        result = utils::replaceAll(result, blueprints::jni::placeholder::C_CALLING_TYPE_CONVERSION,
+        result = utils::replaceAll(result, blueprints::placeholder::jni::CALLING_TYPE_CONVERSION_IN,
                                    isStatic ? "" : mapper::JifyMapper<CallingType>::In("", "", ""));
 
         // generate return value of the passed returntype
@@ -197,11 +197,11 @@ namespace cppJify::generator::jni {
                 generateParamList<LANGUAGE_TYPE::C, false, Params...>()
             );
             // clang-format on
-            result = utils::replaceAll(result, blueprints::jni::placeholder::C_RETURN_RESULT, allocation);
+            result = utils::replaceAll(result, blueprints::placeholder::RETURN_VALUE, allocation);
 
         } else {
             result =
-                utils::replaceAll(result, blueprints::jni::placeholder::C_RETURN_RESULT, mapper::JifyMapper<ReturnType>::Out(functionCall));
+                utils::replaceAll(result, blueprints::placeholder::RETURN_VALUE, mapper::JifyMapper<ReturnType>::Out(functionCall));
         }
 
         return result;

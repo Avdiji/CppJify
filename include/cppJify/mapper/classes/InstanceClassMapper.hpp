@@ -35,8 +35,8 @@ namespace cppJify::mapper::classes {
                 // compose all mapped jni-functions
                 std::string content = blueprints::JIFY_BLUEPRINT_JAVA_INSTANCE_CLASS;
 
-                content = utils::replaceAll(content, blueprints::placeholder::PACKAGE, _jPackage);
-                content = utils::replaceAll(content, blueprints::placeholder::IMPORTS, getAllImports());
+                content = utils::replaceAll(content, blueprints::placeholder::java::PACKAGE, _jPackage);
+                content = utils::replaceAll(content, blueprints::placeholder::java::IMPORTS, getAllImports());
                 content = utils::replaceAll(content, blueprints::placeholder::CLASSNAME, _jClassname);
                 content = utils::replaceAll(content, blueprints::placeholder::CLASSBODY, getAllJavaFunctions());
 

@@ -19,7 +19,10 @@ namespace cppJify {
         const std::string baseDir = outputPath + "/internal";
         utils::ensureDirectory(baseDir);
 
-        utils::createFile(CPP_JIFY_BASE_JNI_FILENAME, blueprints::jni::JIFY_BLUEPRINT_CPPJIFY_BASE, baseDir);
+        std::string cppJifyJniBaseContent = blueprints::jni::JIFY_BLUEPRINT_JNI_CPPJIFY_BASE;
+        cppJifyJniBaseContent = utils::replaceAll(cppJifyJniBaseContent, blueprints::placeholder::jni::PRAGMAONCE, "#pragma once");
+
+        utils::createFile(CPP_JIFY_BASE_JNI_FILENAME, cppJifyJniBaseContent, baseDir);
         utils::createFile("CppJifyBase.java", blueprints::JIFY_BLUEPRINT_JAVA_CPPJIFY_BASE_INTERFACE, baseDir);
 
         for (const auto& staticClass : _classMapper) {
