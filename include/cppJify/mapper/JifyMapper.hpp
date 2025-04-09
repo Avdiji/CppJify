@@ -31,6 +31,8 @@ namespace cppJify::mapper {
             static const std::string CType() {
                 // TODO make sure this is being demangled properly...
                 std::string result = typeid(T).name();
+                result = utils::replaceAll(result, "struct ", "");
+                result = utils::replaceAll(result, "class ", "");
                 return result;
             }
 
@@ -62,16 +64,16 @@ namespace cppJify::mapper {
              * @param identifier An Identifier in order to enable more complex mapping without generating duplicate names.
              */
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                // TODO make this work with multiple cppJify mappedo objects...
                 return JIFY_FMT(
                     JIFY_RAW(
-                        jclass cppJifyBaseClass = env->GetObjectClass(callingObject);
-                        \n\t\tjmethodID getNativeHandleMethod = env->GetMethodID(cppJifyBaseClass, "getNativeHandle", "()J");
-
-                        \n\n\t\t{} *nativeCallingObject = reinterpret_cast<{}*>(env->CallLongMethod(callingObject, getNativeHandleMethod));
+                        jclass cppJifyBaseClass{} = env->GetObjectClass({});
+                        \n\t\tjmethodID getNativeHandleMethod{} = env->GetMethodID(cppJifyBaseClass{}, "getNativeHandle", "()J");
+                        \n\t\t{} *{} = reinterpret_cast<{}*>(env->CallLongMethod({}, getNativeHandleMethod{}));\n\n\t\t
                     ),
-                    CType(),
-                    CType()
+                    id, jniVar,
+                    id,id,
+                    CType(), cVar,
+                    CType(), jniVar, id
                 );
             }
 
@@ -82,5 +84,4 @@ namespace cppJify::mapper {
              */
             static const std::string Out(const std::string& functionCall) { return "JIFY_RAW(TODO map this properly);"; }
     };
-
 }  // namespace cppJify::mapper

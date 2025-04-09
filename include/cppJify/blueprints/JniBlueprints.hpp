@@ -26,7 +26,7 @@ namespace cppJify::blueprints::jni {
         {pragmaonce}
     
         \n\n#include <jni.h>
-        \n#include {cppjify_base_include_path}
+        \n#include "{cppjify_base_include_path}"
         \n\n{includes}
     
         \n\nextern "C" {
@@ -41,6 +41,16 @@ namespace cppJify::blueprints::jni {
         \n\tJNIEXPORT {return_type} JNICALL {mangled_funcname}(JNIEnv *env, {static_specifier}{params})
     );
 
+
+    // Body of every generated static JNI-function (functions that map to static java functions)
+    inline const std::string JIFY_BLUEPRINT_JNI_STATIC_FUNC_BODY = JIFY_RAW(
+        \n\t{
+            \n\t\t{conversions_in}
+
+            \n\t\t{return_value}
+        \n\t}
+    );
+
     // Body of every generated JNI-function
     inline const std::string JIFY_BLUEPRINT_JNI_FUNC_BODY = JIFY_RAW(
         \n\t{
@@ -48,6 +58,17 @@ namespace cppJify::blueprints::jni {
             \n\t\t{conversions_in}
             
             \n\t\t{return_value}
+        \n\t}
+    );
+
+    // Body of every allocation function
+    inline const std::string JIFY_BLUEPRINT_JNI_ALLOC_FUNC_BODY = JIFY_RAW(
+        \n\t{
+            \n\t\t{conversions_in}
+
+            \n\t\t{calling_type} *nativeObject = new {callingType}({params_no_type});
+            \n\t\tjlong nativeHandle = reinterpret_cast<jlong>(nativeObject);
+            \n\t\treturn nativeHandle;
         \n\t}
     );
     // clang-format on

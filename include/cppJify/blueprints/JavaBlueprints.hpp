@@ -53,7 +53,7 @@ namespace cppJify::blueprints {
 
     // Base for every generated Java function signature
     inline const std::string JIFY_BLUEPRINT_JAVA_FUNC_SIGNATURE = JIFY_RAW(
-        \n\t{access_specifier} {static_specifier}{native_specifier}{return_type} {funcname}({params})
+        \n\t{access_specifier} {static_specifier}{native_specifier}{return_type} {funcname}({params});
     );
 
 

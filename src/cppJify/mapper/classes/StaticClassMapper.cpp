@@ -58,6 +58,7 @@ namespace cppJify::mapper::classes {
 
         // compose all mapped jni-functions
         std::string content = blueprints::jni::JIFY_BLUEPRINT_JNI_BASE;
+        content = utils::replaceAll(content, blueprints::placeholder::jni::PRAGMAONCE, "#pragma once");
         content = utils::replaceAll(content, blueprints::placeholder::jni::CPPJIFY_BASE_INCLUDE_PATH, cppjifyBaseJniPath);
         content = utils::replaceAll(content, blueprints::placeholder::jni::INCLUDES, getAllIncludes());
         content = utils::replaceAll(content, blueprints::placeholder::CUSTOM_CODE, getAllCustomJniCode());
