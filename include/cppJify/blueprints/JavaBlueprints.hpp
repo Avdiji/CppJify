@@ -56,8 +56,8 @@ namespace cppJify::blueprints {
         \n\t{access_specifier} {static_specifier}{native_specifier}{return_type} {funcname}({params});
     );
 
-
-    inline const std::string JIFY_BLUEPRINT_JAVA_CONSTRUCTOR_SIGNATURE = JIFY_RAW(
+    // Base for every generated Java constructor
+    inline const std::string JIFY_BLUEPRINT_JAVA_CONSTRUCTOR = JIFY_RAW(
         \n\tpublic {classname}({params}) { nativeHandle = allocate({params_no_type}); }
     );
     // clang-format on

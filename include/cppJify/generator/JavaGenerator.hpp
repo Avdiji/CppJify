@@ -37,7 +37,7 @@ namespace cppJify::generator::java {
 
     template <class... Params>
     std::string generateConstructorSignature(const std::string& jclassname) {
-        std::string result = blueprints::JIFY_BLUEPRINT_JAVA_CONSTRUCTOR_SIGNATURE;
+        std::string result = blueprints::JIFY_BLUEPRINT_JAVA_CONSTRUCTOR;
 
         result = utils::replaceAll(result, blueprints::placeholder::CLASSNAME, jclassname);
 
