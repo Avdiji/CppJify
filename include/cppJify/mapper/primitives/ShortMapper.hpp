@@ -13,7 +13,7 @@ namespace cppJify::mapper {
             static const std::string JniType() { return "jshort"; }
             static const std::string JavaType() { return "short"; }
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                return JIFY_FMT(JIFY_RAW({} = static_cast<short>({});), cVar, jniVar);
+                return JIFY_FMT(JIFY_RAW(\n\t\tshort {} = static_cast<short>({});), cVar, jniVar);
             }
             static const std::string Out(const std::string& functionCall) {
                 return JIFY_FMT(JIFY_RAW(return static_cast<jshort>({});), functionCall);
@@ -28,7 +28,7 @@ namespace cppJify::mapper {
             static const std::string JniType() { return "jshort"; }
             static const std::string JavaType() { return "short"; }
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                return JIFY_FMT(JIFY_RAW({} = static_cast<const short>({});), cVar, jniVar);
+                return JIFY_FMT(JIFY_RAW(\n\t\tconst short {} = static_cast<const short>({});), cVar, jniVar);
             }
             static const std::string Out(const std::string& functionCall) {
                 return JIFY_FMT(JIFY_RAW(return static_cast<jshort>({});), functionCall);
@@ -43,7 +43,7 @@ namespace cppJify::mapper {
             static const std::string JniType() { return "jshort"; }
             static const std::string JavaType() { return "short"; }
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                return JIFY_FMT(JIFY_RAW({} = static_cast<short>({});), cVar, jniVar);
+                return JIFY_FMT(JIFY_RAW(\n\t\tshort {} = static_cast<short>({});), cVar, jniVar);
             }
             static const std::string Out(const std::string& functionCall) {
                 return JIFY_FMT(JIFY_RAW(return static_cast<jshort>({});), functionCall);
@@ -58,7 +58,7 @@ namespace cppJify::mapper {
             static const std::string JniType() { return "jshort"; }
             static const std::string JavaType() { return "short"; }
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                return JIFY_FMT(JIFY_RAW({} = static_cast<const short>({});), cVar, jniVar);
+                return JIFY_FMT(JIFY_RAW(\n\t\tconst short {} = static_cast<const short>({});), cVar, jniVar);
             }
             static const std::string Out(const std::string& functionCall) {
                 return JIFY_FMT(JIFY_RAW(return static_cast<jshort>({});), functionCall);

@@ -1,8 +1,6 @@
 #pragma once
 // convenience header...
 
-// TODO finish StringMapper (consider using StringBuffer for 'true' reference/ptr behaviour) and map all SimpleType* to long/jlong...
-
 #include <cppJify/mapper/primitives/BoolMapper.hpp>
 #include <cppJify/mapper/primitives/CharMapper.hpp>
 #include <cppJify/mapper/primitives/DoubleMapper.hpp>
@@ -12,3 +10,6 @@
 #include <cppJify/mapper/primitives/ShortMapper.hpp>
 #include <cppJify/mapper/primitives/StringMapper.hpp>
 #include <cppJify/mapper/primitives/VoidMapper.hpp>
+
+#include <cppJify/mapper/type_modifiers/PtrTypeMapper.hpp>
+#include <cppJify/mapper/type_modifiers/RefTypeMapper.hpp>

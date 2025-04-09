@@ -13,7 +13,7 @@ namespace cppJify::mapper {
             static const std::string JniType() { return "jdouble"; }
             static const std::string JavaType() { return "double"; }
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                return JIFY_FMT(JIFY_RAW({} = static_cast<double>({});), cVar, jniVar);
+                return JIFY_FMT(JIFY_RAW(\n\t\tdouble {} = static_cast<double>({});), cVar, jniVar);
             }
             static const std::string Out(const std::string& functionCall) {
                 return JIFY_FMT(JIFY_RAW(return static_cast<jdouble>({});), functionCall);
@@ -28,7 +28,7 @@ namespace cppJify::mapper {
             static const std::string JniType() { return "jdouble"; }
             static const std::string JavaType() { return "double"; }
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                return JIFY_FMT(JIFY_RAW({} = static_cast<const double>({});), cVar, jniVar);
+                return JIFY_FMT(JIFY_RAW(\n\t\tconst double {} = static_cast<const double>({});), cVar, jniVar);
             }
             static const std::string Out(const std::string& functionCall) {
                 return JIFY_FMT(JIFY_RAW(return static_cast<jdouble>({});), functionCall);
@@ -43,7 +43,7 @@ namespace cppJify::mapper {
             static const std::string JniType() { return "jdouble"; }
             static const std::string JavaType() { return "double"; }
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                return JIFY_FMT(JIFY_RAW({} = static_cast<double>({});), cVar, jniVar);
+                return JIFY_FMT(JIFY_RAW(\n\t\tdouble {} = static_cast<double>({});), cVar, jniVar);
             }
             static const std::string Out(const std::string& functionCall) {
                 return JIFY_FMT(JIFY_RAW(return static_cast<jdouble>({});), functionCall);
@@ -58,7 +58,7 @@ namespace cppJify::mapper {
             static const std::string JniType() { return "jdouble"; }
             static const std::string JavaType() { return "double"; }
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                return JIFY_FMT(JIFY_RAW({} = static_cast<const double>({});), cVar, jniVar);
+                return JIFY_FMT(JIFY_RAW(\n\t\tconst double {} = static_cast<const double>({});), cVar, jniVar);
             }
             static const std::string Out(const std::string& functionCall) {
                 return JIFY_FMT(JIFY_RAW(return static_cast<jdouble>({});), functionCall);

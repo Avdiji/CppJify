@@ -24,10 +24,27 @@ namespace cppJify::generator::jni {
      */
     template <class CallingType, class... Params>
     const std::string generateAllocFunction(const std::string &jPackage, const std::string &jClassname) {
-        const std::string functionSignature = generateFunctionSignature<CallingType, long, Params...>("allocate", jPackage, jClassname);
-        const std::string allocBody = generateAllocBody<CallingType, Params...>();
+        std::string result = blueprints::jni::JIFY_BLUEPRINT_JNI_ALLOC_FUNC;
 
-        return functionSignature + allocBody;
+        // Signature...
+        const std::string mangledJNIFuncname = generateMangledJNIFuncname<Params...>("allocate", jPackage, jClassname);
+        const std::string signatureParamList = generateParamList<LANGUAGE_TYPE::JNI, true, Params...>();
+
+        result = utils::replaceAll(result, blueprints::placeholder::MANGLED_FUNCNAME, mangledJNIFuncname);
+        result = utils::replaceAll(result, blueprints::placeholder::PARAMS, signatureParamList.size() > 0 ? ", " + signatureParamList : "");
+
+        // Body...
+        // JNI -> C++ conversions for all parameter
+        int counter = 0;
+        std::stringstream paramConversions;
+        ((paramConversions << generateParamCConversion<Params>(counter++)), ...);
+
+        result = utils::replaceAll(result, blueprints::placeholder::jni::CONVERSIONS_IN, paramConversions.str());
+        result = utils::replaceAll(result, blueprints::placeholder::CALLING_TYPE, mapper::JifyMapper<CallingType>::CType());
+        result =
+            utils::replaceAll(result, blueprints::placeholder::PARAMS_NO_TYPE, generateParamList<LANGUAGE_TYPE::C, false, Params...>());
+
+        return result;
     }
 
     /**
@@ -235,38 +252,20 @@ namespace cppJify::generator::jni {
 
         // JNI -> C++ conversion for the calling type
         int paramCounter = 0;
-        const std::string callingTypeName = generateParam<CallingType>(paramCounter).jni_paramName;
+        const FunctionParam callingParam = generateParam<CallingType>(paramCounter);
         const std::string callingTypeConversion = generateParamCConversion<CallingType>(paramCounter++);
         result = utils::replaceAll(result, blueprints::placeholder::jni::CALLING_TYPE_CONVERSION_IN, callingTypeConversion);
 
         // generate return value of the passed returntype
-        const std::string functionCall =
-            callingTypeName + "->" + cppFunctionName + "(" + generateParamList<LANGUAGE_TYPE::C, false, Params...>(paramCounter) + ")";
+        const std::string functionCall = callingParam.c_paramName + "." + cppFunctionName + "(" +
+                                         generateParamList<LANGUAGE_TYPE::C, false, Params...>(paramCounter) + ")";
 
         // JNI -> C++ conversions for all other parameter
         std::stringstream paramConversions;
         ((paramConversions << generateParamCConversion<Params>(paramCounter++)), ...);
         result = utils::replaceAll(result, blueprints::placeholder::jni::CONVERSIONS_IN, paramConversions.str());
 
-
         result = utils::replaceAll(result, blueprints::placeholder::RETURN_VALUE, mapper::JifyMapper<ReturnType>::Out(functionCall));
-        return result;
-    }
-
-    template <class CallingType, class... Params>
-    std::string generateAllocBody() {
-        std::string result = blueprints::jni::JIFY_BLUEPRINT_JNI_ALLOC_FUNC_BODY;
-
-        // JNI -> C++ conversions for all parameter
-        int counter = 0;
-        std::stringstream paramConversions;
-        ((paramConversions << generateParamCConversion<Params>(counter++)), ...);
-
-        result = utils::replaceAll(result, blueprints::placeholder::jni::CONVERSIONS_IN, paramConversions.str());
-        result = utils::replaceAll(result, blueprints::placeholder::CALLING_TYPE, mapper::JifyMapper<CallingType>::CType());
-        result =
-            utils::replaceAll(result, blueprints::placeholder::PARAMS_NO_TYPE, generateParamList<LANGUAGE_TYPE::C, false, Params...>());
-
         return result;
     }
 

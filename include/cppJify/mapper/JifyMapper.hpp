@@ -18,7 +18,6 @@ namespace cppJify::mapper {
      * @brief Template for all typemapings. Use this class to define custom mappings.
      * @tparam T The datatype to be mapped.
      * @tparam Additional... Additional generic types in case of std::vector<U> (or any other templated datatype).
-     *
      */
     template <class T, class... Additional>
     class JifyMapper {
@@ -33,6 +32,7 @@ namespace cppJify::mapper {
                 std::string result = typeid(T).name();
                 result = utils::replaceAll(result, "struct ", "");
                 result = utils::replaceAll(result, "class ", "");
+
                 return result;
             }
 
@@ -66,14 +66,10 @@ namespace cppJify::mapper {
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
                 return JIFY_FMT(
                     JIFY_RAW(
-                        jclass cppJifyBaseClass{} = env->GetObjectClass({});
-                        \n\t\tjmethodID getNativeHandleMethod{} = env->GetMethodID(cppJifyBaseClass{}, "getNativeHandle", "()J");
-                        \n\t\t{} *{} = reinterpret_cast<{}*>(env->CallLongMethod({}, getNativeHandleMethod{}));\n\n\t\t
+                        \n\t\t{} {} = *cppJify::helper::GetNativePtr<{}>(env, {});
                     ),
-                    id, jniVar,
-                    id,id,
                     CType(), cVar,
-                    CType(), jniVar, id
+                    CType(), jniVar
                 );
             }
 

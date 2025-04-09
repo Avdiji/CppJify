@@ -24,7 +24,7 @@ namespace cppJify::blueprints {
 
     // Base for every generated Java-Utils class
     inline const std::string JIFY_BLUEPRINT_JAVA_STATIC_CLASS = JIFY_RAW(
-        package {package}
+        package {package};
 
         \n\n{imports}
 
@@ -38,7 +38,7 @@ namespace cppJify::blueprints {
 
     // Base for every generated Java-Instance class
     inline const std::string JIFY_BLUEPRINT_JAVA_INSTANCE_CLASS = JIFY_RAW(
-        package {package}
+        package {package};
         
         \n\n{imports}
 
