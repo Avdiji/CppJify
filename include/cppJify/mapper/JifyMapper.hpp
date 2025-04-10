@@ -1,11 +1,11 @@
 #pragma once
 
+#include <cppJify/utils/MacroUtils.hpp>
 #include <cppJify/utils/StringUtils.hpp>
 #include <map>
 #include <stdexcept>
 #include <string>
 #include <typeinfo>
-#include <cppJify/utils/MacroUtils.hpp>
 
 namespace cppJify::mapper {
 
@@ -65,13 +65,8 @@ namespace cppJify::mapper {
              * @param identifier An Identifier in order to enable more complex mapping without generating duplicate names.
              */
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                return JIFY_FMT(
-                    JIFY_RAW(
-                        \n\t\t{} {} = *cppJify::helper::GetNativePtr<{}>(env, {});
-                    ),
-                    CType(), cVar,
-                    CType(), jniVar
-                );
+                return JIFY_FMT(JIFY_RAW(
+                        \n\t\t{} {} = *cppJify::helper::cppJifyObjectToPtr<{}>(env, {});), CType(), cVar, CType(), jniVar);
             }
 
             /**
@@ -79,6 +74,19 @@ namespace cppJify::mapper {
              *
              * @param functionCall The native function-call returning the C++ type.
              */
-            static const std::string Out(const std::string& functionCall) { return "JIFY_RAW(TODO map this properly);"; }
+            static const std::string Out(const std::string& functionCall) {
+                // clang-format off
+                const std::string fullJName = utils::replaceAll(JavaType(), ".", "/");
+
+                return JIFY_FMT(
+                    JIFY_RAW(
+                        {}* result = new {}({});
+                        \n\t\treturn cppJify::helper::ptrToCppJifyObject(env, "{}", result);
+                    ),
+                    CType(), CType(), functionCall,
+                    fullJName
+                );
+                // clang-format on
+            }
     };
 }  // namespace cppJify::mapper

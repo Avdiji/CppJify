@@ -46,7 +46,8 @@ namespace cppJify::blueprints {
 
         \n\npublic class {classname} implements com.cppjify.CppJifyBase {
             \n\n\tprivate long nativeHandle;
-            
+            \n\tprivate {classname}(final long nativeHandle) { this.nativeHandle = nativeHandle; }
+
             \n\n\tpublic long getNativeHandle() { return this.nativeHandle; }
             \n\tpublic native void close() throws Exception;
             \n\tprotected void finalize() throws Throwable { close(); }

@@ -20,17 +20,26 @@ namespace cppJify::blueprints::jni {
         {pragmaonce}
 
         \n\n#include <jni.h>
+        \n\n#include <string>
 
         \n\nnamespace cppJify::helper {
 
             \n\n\ttemplate <typename T>
-            \n\tinline T* GetNativePtr(JNIEnv* env, jobject obj) 
+            \n\tinline T* cppJifyObjectToPtr(JNIEnv* env, jobject obj) 
             \n\t{
                 \n\t\tjclass cls = env->GetObjectClass(obj);
                 \n\t\tjmethodID mid = env->GetMethodID(cls, "getNativeHandle", "()J");
                 \n\t\treturn reinterpret_cast<T*>(env->CallLongMethod(obj, mid));
             \n\t}
-        }
+            
+            \n\n\ttemplate <typename T>
+            \n\tinline jobject ptrToCppJifyObject(JNIEnv* env, const std::string &classname, T* ptr)
+            \n\t{
+                \n\t\tjclass cls = env->FindClass(classname.c_str());
+                \n\t\tjmethodID constructor = env->GetMethodID(cls, "<init>", "(J)V");
+                \n\t\treturn env->NewObject(cls, constructor, reinterpret_cast<jlong>(ptr));
+            \n\t}
+        \n}
     );
 
 
