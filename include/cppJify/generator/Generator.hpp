@@ -45,7 +45,8 @@ namespace cppJify::generator {
      * Creates a list of JNI function parameters, including their types and names.
      *
      * @tparam Params The parameter types of the function.
-     *
+     * @param counterStart The starting id of the paramname [DEFAULT = 0]
+     * 
      * @return A vector of JniParam structures.
      */
     template <class... Params>
@@ -91,7 +92,9 @@ namespace cppJify::generator {
      * @tparam JNI_STYLE Whether to use JNI style naming.
      * @tparam WITH_TYPE Whether to include the type in the parameter list.
      * @tparam Params The parameter types of the function.
-     *
+     * 
+     * @param counterStart The starting id of the param-names [DEFAULT = 0]
+     * 
      * @return A formatted parameter list as a string.
      */
     template <LANGUAGE_TYPE TYPE, bool WITH_TYPE, class... Params>

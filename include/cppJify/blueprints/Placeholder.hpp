@@ -35,8 +35,6 @@ namespace cppJify::blueprints::placeholder {
         inline const std::string CPPJIFY_BASE_INCLUDE_PATH = "{cppjify_base_include_path}";
         inline const std::string CALLING_TYPE_CONVERSION_IN = "{calling_type_in_conversion}";
         inline const std::string CONVERSIONS_IN = "{conversions_in}";
-        
-
     }  // namespace jni
 
 }  // namespace cppJify::blueprints::placeholder

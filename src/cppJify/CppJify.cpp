@@ -1,15 +1,16 @@
 #include <cppJify/CppJify.hpp>
 #include <cppJify/blueprints/JavaBlueprints.hpp>
 #include <cppJify/blueprints/JniBlueprints.hpp>
+#include <cppJify/blueprints/Placeholder.hpp>
 #include <cppJify/mapper/classes/StaticClassMapper.hpp>
 #include <cppJify/utils/FilesystemUtils.hpp>
+#include <cppJify/utils/StringUtils.hpp>
 #include <memory>
 #include <string>
 
 namespace cppJify {
 
-    std::shared_ptr<mapper::classes::StaticClassMapper> CppJify::mapUtilsClass(const std::string& jPackage,
-                                                                                  const std::string& jClassname) {
+    std::shared_ptr<mapper::classes::StaticClassMapper> CppJify::mapUtilsClass(const std::string& jPackage, const std::string& jClassname) {
         auto mapper = std::make_shared<mapper::classes::StaticClassMapper>(jPackage, jClassname);
         _classMapper.insert(mapper);
         return mapper;

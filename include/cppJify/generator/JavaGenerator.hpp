@@ -13,13 +13,15 @@ namespace cppJify::generator::java {
      * This template function generates a formatted Java function signature using the provided function name,
      * access specifier, and attributes such as whether the function is static or native.
      *
-     * @tparam IsStatic Boolean value indicating if the function is static.
-     * @tparam IsNative Boolean value indicating if the function is native.
+     * @tparam IsStatic Boolean indicating if the generated function should be static.
+     * @tparam IsNative Boolean indicating if the generated function should be native.
      * @tparam ReturnType The C++ return type to be mapped to a Java-compatible type.
-     * @tparam Params Variadic template parameters representing function parameter types.
-     * @param jFunctionName The name of the Java function to be generated.
-     * @param accessSpecifier The access specifier (e.g., public, private, protected) for the function.
-     * @return A formatted string representing the generated Java function signature.
+     * @tparam Params Variadic template parameters representing the C++ function parameter types.
+     *
+     * @param jFunctionName The name of the Java function to generate.
+     * @param accessSpecifier The access modifier for the Java function (e.g., "public", "private").
+     *
+     * @return A formatted Java function signature string.
      */
     template <bool IsStatic, bool IsNative, class ReturnType, class... Params>
     std::string generateFunctionSignature(const std::string& jFunctionName, const std::string& accessSpecifier) {
@@ -35,8 +37,19 @@ namespace cppJify::generator::java {
         return result;
     }
 
+    /**
+     * @brief Generates a Java constructor signature string.
+     *
+     * This template function generates a formatted Java constructor string.
+     *
+     * @tparam Params Variadic template parameters representing the constructor parameter types.
+     *
+     * @param jclassname The name of the Java class for which the constructor is being generated.
+     *
+     * @return A formatted Java constructor string.
+     */
     template <class... Params>
-    std::string generateConstructorSignature(const std::string& jclassname) {
+    std::string generateConstructor(const std::string& jclassname) {
         std::string result = blueprints::JIFY_BLUEPRINT_JAVA_CONSTRUCTOR;
 
         result = utils::replaceAll(result, blueprints::placeholder::CLASSNAME, jclassname);

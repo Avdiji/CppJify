@@ -43,7 +43,7 @@ namespace cppJify::blueprints::jni {
         \n\n{includes}
     
         \n\nextern "C" {
-            \n\n{custom_code}
+            \n{custom_code}
     
             \n\n{body}
         }
@@ -74,7 +74,7 @@ namespace cppJify::blueprints::jni {
         \n\t}
     );
 
-    // Body of every allocation function
+    // Code for every generated allocate function
     inline const std::string JIFY_BLUEPRINT_JNI_ALLOC_FUNC = JIFY_RAW(
         \n\tJNIEXPORT jlong JNICALL {mangled_funcname}(JNIEnv *env, jclass clazz{params})
         \n\t{
@@ -83,6 +83,15 @@ namespace cppJify::blueprints::jni {
             \n\n\t\t{calling_type} *nativeObject = new {calling_type}({params_no_type});
             \n\t\tjlong nativeHandle = reinterpret_cast<jlong>(nativeObject);
             \n\t\treturn nativeHandle;
+        \n\t}
+    );
+
+    // Code for every generated close (deallocate) function
+    inline const std::string JIFY_BLUEPRINT_JNI_DEALLOC_FUNC = JIFY_RAW(
+        \n\tJNIEXPORT void JNICALL {mangled_funcname}(JNIEnv *env, jobject arg0)
+        \n\t{
+            {calling_type_in_conversion}
+            \n\t\tdelete carg0;
         \n\t}
     );
     // clang-format on

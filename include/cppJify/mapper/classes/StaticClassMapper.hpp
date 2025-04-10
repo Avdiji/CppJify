@@ -3,7 +3,6 @@
 #include <cppJify/generator/JavaGenerator.hpp>
 #include <cppJify/generator/JniGenerator.hpp>
 #include <filesystem>
-#include <iostream>
 #include <set>
 #include <string>
 
@@ -12,10 +11,8 @@ namespace cppJify {
     const inline std::string CPP_JIFY_BASE_JNI_FILENAME = "CppJifyBase.cppjify.cpp";
 
     namespace mapper::classes {
-
         /**
-         * @brief Mapper for Utility-classes, used to map non-member functions only.
-         *
+         * @brief Mapper for Utility-classes, used to map non-member and/or static functions only.
          */
         class StaticClassMapper {
             public:
@@ -32,26 +29,38 @@ namespace cppJify {
                  *
                  * @param cincludes A set of all the c-includes for this class.
                  */
-                virtual void addCIncludes(const std::set<std::string>& cincludes);
+                void addCIncludes(const std::set<std::string>& cincludes);
 
                 /**
                  * @brief Append Customized JNI code, which will be added on top of the generated file.
                  * @param customJniCode The custom code as a collection of strings.
                  */
-                virtual void appendCustomJniCode(const std::set<std::string>& customJniCode);
+                void appendCustomJniCode(const std::set<std::string>& customJniCode);
 
                 /**
                  * @brief Append customized JNI code, which will be added on top of the generated file.
                  * @param customJniCode The custom code as a string.
                  */
-                virtual void appendCustomJniCode(const std::string& customJniCode);
+                void appendCustomJniCode(const std::string& customJniCode);
+
+                /**
+                 * @brief Append Customized Java code, which will be added on top of the generated file.
+                 * @param customJavaCode The custom code as a collection of strings.
+                 */
+                void appendCustomJavaCode(const std::set<std::string>& customJavaCode);
+
+                /**
+                 * @brief Append customized Java code, which will be added on top of the generated file.
+                 * @param customJavaCode The custom code as a string.
+                 */
+                void appendCustomJavaCode(const std::string& customJavaCode);
 
                 /**
                  * @brief Set Java-classes to be imported.
                  *
                  * @param A set of all java-imports for this class.
                  */
-                virtual void addJImports(const std::set<std::string>& jimports);
+                void addJImports(const std::set<std::string>& jimports);
 
                 /**
                  * Generate the corresponding JNI-File for this class.
@@ -59,7 +68,7 @@ namespace cppJify {
                  *
                  * @param outputBase The base-directory of the output.
                  */
-                virtual void generateJniFile(const std::string& outputBase) const;
+                void generateJniFile(const std::string& outputBase) const;
 
                 /**
                  * Generate the corresponding Java-File for this class.
@@ -94,42 +103,49 @@ namespace cppJify {
                     return *this;
                 }
 
-            private:
-                /**
-                 * Generate a string of all jni-functions to be mapped for this class.
-                 *
-                 * @return A string of all mapped Jni-functions.
-                 */
-                virtual std::string getAllJniFunctions() const;
-
-                /**
-                 * Generate a string of all jni-includes for this class.
-                 *
-                 * @return A string of all includes.
-                 */
-                virtual std::string getAllIncludes() const;
-
-                /**
-                 * Generate a string of all custom-jni-code for this class.
-                 *
-                 * @return A string of all the custom JNI-code.
-                 */
-                virtual std::string getAllCustomJniCode() const;
-
             protected:
                 /**
                  * Generate a string of all java-imports for this class.
                  *
                  * @return A string of all imports.
                  */
-                virtual std::string getAllImports() const;
+                std::string getAllImports() const;
 
                 /**
                  * Generate a string of all java-functions to be mapped for this class.
                  *
                  * @return A string of all mapped java-functions.
                  */
-                virtual std::string getAllJavaFunctions() const;
+                std::string getAllJavaFunctions() const;
+
+                /**
+                 * Generate a string of all custom-java-code for this class.
+                 *
+                 * @return A string of all the custom Java-code.
+                 */
+                std::string getAllCustomJavaCode() const;
+
+            private:
+                /**
+                 * Generate a string of all jni-functions to be mapped for this class.
+                 *
+                 * @return A string of all mapped Jni-functions.
+                 */
+                std::string getAllJniFunctions() const;
+
+                /**
+                 * Generate a string of all jni-includes for this class.
+                 *
+                 * @return A string of all includes.
+                 */
+                std::string getAllIncludes() const;
+
+                /**
+                 * Generate a string of all custom-jni-code for this class.
+                 *
+                 * @return A string of all the custom JNI-code.
+                 */
+                std::string getAllCustomJniCode() const;
 
             protected:
                 const std::string _jPackage;
@@ -140,9 +156,10 @@ namespace cppJify {
 
             private:
                 std::set<std::string> _cincludes = {};
-                std::set<std::string> _customJniCode = {};
-
                 std::set<std::string> _jimports = {};
+
+                std::set<std::string> _customJniCode = {};
+                std::set<std::string> _customJavaCode = {};
         };
 
     }  // namespace mapper::classes

@@ -18,6 +18,7 @@ namespace cppJify::mapper::classes {
     //////////////////////////////////////// JNI ////////////////////////////////////////
     //////////////////////////////////////// JNI ////////////////////////////////////////
     void StaticClassMapper::addCIncludes(const std::set<std::string>& cincludes) { _cincludes.insert(cincludes.begin(), cincludes.end()); }
+    
     void StaticClassMapper::appendCustomJniCode(const std::string& customJniCode) { _customJniCode.insert(customJniCode); }
     void StaticClassMapper::appendCustomJniCode(const std::set<std::string>& customJniCode) {
         _customJniCode.insert(customJniCode.begin(), customJniCode.end());
@@ -76,6 +77,11 @@ namespace cppJify::mapper::classes {
     //////////////////////////////////////// JAVA ////////////////////////////////////////
     void StaticClassMapper::addJImports(const std::set<std::string>& jimports) { _jimports.insert(jimports.begin(), jimports.end()); }
 
+    void StaticClassMapper::appendCustomJavaCode(const std::string& customJavaCode) { _customJavaCode.insert(customJavaCode); }
+    void StaticClassMapper::appendCustomJavaCode(const std::set<std::string>& customJavaCode) {
+        _customJavaCode.insert(customJavaCode.begin(), customJavaCode.end());
+    }
+
     std::string StaticClassMapper::getAllJavaFunctions() const {
         std::ostringstream result;
         for (const auto& mappedFunction : _mappedFunctionsJava) { result << mappedFunction << "\n"; }
@@ -85,6 +91,12 @@ namespace cppJify::mapper::classes {
     std::string StaticClassMapper::getAllImports() const {
         std::ostringstream result;
         for (const auto& import : _jimports) { result << "import " << import << ";\n"; }
+        return result.str();
+    }
+
+    std::string StaticClassMapper::getAllCustomJavaCode() const {
+        std::ostringstream result;
+        for (const auto& customCode : _customJavaCode) { result << customCode << "\n"; }
         return result.str();
     }
 
@@ -99,6 +111,7 @@ namespace cppJify::mapper::classes {
         // compose all mapped jni-functions
         std::string content = blueprints::JIFY_BLUEPRINT_JAVA_STATIC_CLASS;
 
+        content = utils::replaceAll(content, blueprints::placeholder::CUSTOM_CODE, getAllCustomJavaCode());
         content = utils::replaceAll(content, blueprints::placeholder::java::PACKAGE, _jPackage);
         content = utils::replaceAll(content, blueprints::placeholder::java::IMPORTS, getAllImports());
         content = utils::replaceAll(content, blueprints::placeholder::CLASSNAME, _jClassname);

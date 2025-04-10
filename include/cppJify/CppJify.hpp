@@ -47,12 +47,20 @@ namespace cppJify {
              * This method is designed to create utility classes that represent non-member functions
              * or functions in namespaces that do not belong to specific C++ classes.
              *
+             * @param jPackage The pacakge of the Java file to be generated.
+             * @param jClassname The name of the Java class to be generated.
+             *
              * @return A shared pointer to the created StaticClassMapper.
              */
             std::shared_ptr<mapper::classes::StaticClassMapper> mapUtilsClass(const std::string& jPackage, const std::string& jClassname);
 
             /**
              * @brief Creates a Java class class to map member C++ functions.
+             *
+             * @tparam The Type to be mapped into a java class.
+             *
+             * @param jPackage The pacakge of the Java file to be generated.
+             * @param jClassname The name of the Java class to be generated.
              *
              * @return A shared pointer to the created InstanceClassMapper.
              */

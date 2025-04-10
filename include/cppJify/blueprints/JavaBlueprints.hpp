@@ -16,7 +16,7 @@ namespace cppJify::blueprints {
     inline const std::string JIFY_BLUEPRINT_JAVA_CPPJIFY_BASE_INTERFACE = JIFY_RAW(
         package com.cppjify;
 
-        \n\npublic interface CppJifyBase {
+        \n\npublic interface CppJifyBase extends java.lang.AutoCloseable {
             \n\tlong getNativeHandle();
         \n}
     );
@@ -30,6 +30,8 @@ namespace cppJify::blueprints {
 
         \n\npublic class {classname} {
             \n\n\tprivate {classname} {}
+            
+            \n{custom_code}
 
             \n{classbody}
         \n}
@@ -44,8 +46,13 @@ namespace cppJify::blueprints {
 
         \n\npublic class {classname} implements com.cppjify.CppJifyBase {
             \n\n\tprivate long nativeHandle;
-            \n\tpublic long getNativeHandle() { return this.nativeHandle; }
+            
+            \n\n\tpublic long getNativeHandle() { return this.nativeHandle; }
+            \n\tpublic native void close() throws Exception;
+            \n\tprotected void finalize() throws Throwable { close(); }
 
+            \n{custom_code}
+            
             \n\n{classbody}
         \n}
     );

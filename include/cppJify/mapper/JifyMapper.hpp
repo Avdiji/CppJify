@@ -60,6 +60,7 @@ namespace cppJify::mapper {
             /**
              * @brief The code conversion of Java -> JNI -> C++.
              *
+             * @param cVar The name of the c-variable to be initialized.
              * @param paramName The name of the jni parameter to be converted.
              * @param identifier An Identifier in order to enable more complex mapping without generating duplicate names.
              */
