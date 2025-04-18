@@ -1,4 +1,5 @@
 #include <cppJify/utils/StringUtils.hpp>
+#include <cstddef>
 #include <regex>
 #include <string>
 
@@ -9,4 +10,18 @@ namespace cppJify::utils {
 
         return std::regex_replace(original, pattern, replacement);
     }
+
+    unsigned int countSubstringInString(const std::string& string, const std::string& substring) {
+        if (substring.empty()) { return 0; }
+
+        unsigned int count = 0;
+        size_t pos = 0;
+
+        while ((pos = string.find(substring, pos)) != std::string::npos) {
+            ++count;
+            ++pos;  // Move forward to allow overlapping substrings
+        }
+        return count;
+    }
+
 }  // namespace cppJify::utils

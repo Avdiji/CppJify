@@ -1,6 +1,6 @@
-#include <cppJify/generator/Placeholder.hpp>
-#include <cppJify/generator/blueprints/JavaBlueprints.hpp>
-#include <cppJify/generator/blueprints/JniBlueprints.hpp>
+#include <cppJify/blueprints/JavaBlueprints.hpp>
+#include <cppJify/blueprints/JniBlueprints.hpp>
+#include <cppJify/blueprints/Placeholder.hpp>
 #include <cppJify/mapper/classes/StaticClassMapper.hpp>
 #include <cppJify/utils/FilesystemUtils.hpp>
 #include <cppJify/utils/StringUtils.hpp>
@@ -18,8 +18,10 @@ namespace cppJify::mapper::classes {
     //////////////////////////////////////// JNI ////////////////////////////////////////
     //////////////////////////////////////// JNI ////////////////////////////////////////
     void StaticClassMapper::addCIncludes(const std::set<std::string>& cincludes) { _cincludes.insert(cincludes.begin(), cincludes.end()); }
-    void StaticClassMapper::addCIncludes(std::set<std::string>&& cincludes) {  // NOLINT(cppcoreguidelines-rvalue-reference-param-not-moved)
-        _cincludes.merge(std::move(cincludes));
+    
+    void StaticClassMapper::appendCustomJniCode(const std::string& customJniCode) { _customJniCode.insert(customJniCode); }
+    void StaticClassMapper::appendCustomJniCode(const std::set<std::string>& customJniCode) {
+        _customJniCode.insert(customJniCode.begin(), customJniCode.end());
     }
 
     std::string StaticClassMapper::getAllJniFunctions() const {
@@ -34,19 +36,36 @@ namespace cppJify::mapper::classes {
         return result.str();
     }
 
+    std::string StaticClassMapper::getAllCustomJniCode() const {
+        std::ostringstream result;
+        for (const auto& customCode : _customJniCode) { result << customCode << "\n"; }
+        return result.str();
+    }
+
     void StaticClassMapper::generateJniFile(const std::string& outputBase) const {
         // create output directory
         const std::string packagePath = "/" + utils::replaceAll(_jPackage, ".", "/");
         const std::string fullPath = outputBase + packagePath;
 
+        // compute the relative path to the CppJifyBase jni file
+        const unsigned int pathSubdirCount = utils::countSubstringInString(packagePath, "/");
+        std::string cppjifyBaseJniPath;
+
+        for (unsigned int i = 0; i < pathSubdirCount; ++i) { cppjifyBaseJniPath.append("../"); }
+        cppjifyBaseJniPath.append("internal/" + CPP_JIFY_BASE_JNI_FILENAME);
+
         // create filename
         const std::string filename = _jClassname + ".cppjify" + ".cpp";
 
         // compose all mapped jni-functions
-        std::string content = generator::jni::blueprints::JIFY_BLUEPRINT_JNI_BASE;
-        content = utils::replaceAll(content, generator::jni::placeholder::INCLUDES, getAllIncludes());
-        content = utils::replaceAll(content, generator::jni::placeholder::CODE, getAllJniFunctions());
+        std::string content = blueprints::jni::JIFY_BLUEPRINT_JNI_BASE;
+        content = utils::replaceAll(content, blueprints::placeholder::jni::PRAGMAONCE, "#pragma once");
+        content = utils::replaceAll(content, blueprints::placeholder::jni::CPPJIFY_BASE_INCLUDE_PATH, cppjifyBaseJniPath);
+        content = utils::replaceAll(content, blueprints::placeholder::jni::INCLUDES, getAllIncludes());
+        content = utils::replaceAll(content, blueprints::placeholder::CUSTOM_CODE, getAllCustomJniCode());
+        content = utils::replaceAll(content, blueprints::placeholder::BODY, getAllJniFunctions());
 
+        // create the jni file for the class
         utils::createFile(filename, content, fullPath);
     }
     //////////////////////////////////////// JNI ////////////////////////////////////////
@@ -57,8 +76,10 @@ namespace cppJify::mapper::classes {
     //////////////////////////////////////// JAVA ////////////////////////////////////////
     //////////////////////////////////////// JAVA ////////////////////////////////////////
     void StaticClassMapper::addJImports(const std::set<std::string>& jimports) { _jimports.insert(jimports.begin(), jimports.end()); }
-    void StaticClassMapper::addJImports(std::set<std::string>&& jimports) {  // NOLINT(cppcoreguidelines-rvalue-reference-param-not-moved)
-        _jimports.merge(std::move(jimports));
+
+    void StaticClassMapper::appendCustomJavaCode(const std::string& customJavaCode) { _customJavaCode.insert(customJavaCode); }
+    void StaticClassMapper::appendCustomJavaCode(const std::set<std::string>& customJavaCode) {
+        _customJavaCode.insert(customJavaCode.begin(), customJavaCode.end());
     }
 
     std::string StaticClassMapper::getAllJavaFunctions() const {
@@ -73,6 +94,12 @@ namespace cppJify::mapper::classes {
         return result.str();
     }
 
+    std::string StaticClassMapper::getAllCustomJavaCode() const {
+        std::ostringstream result;
+        for (const auto& customCode : _customJavaCode) { result << customCode << "\n"; }
+        return result.str();
+    }
+
     void StaticClassMapper::generateJavaFile(const std::string& outputBase) const {
         // create output directory
         const std::string packagePath = "/" + utils::replaceAll(_jPackage, ".", "/");
@@ -82,12 +109,13 @@ namespace cppJify::mapper::classes {
         const std::string filename = _jClassname + ".java" + "";
 
         // compose all mapped jni-functions
-        std::string content = generator::java::blueprints::JIFY_BLUEPRINT_JAVA_STATIC_CLASS_BASE;
+        std::string content = blueprints::JIFY_BLUEPRINT_JAVA_STATIC_CLASS;
 
-        content = utils::replaceAll(content, generator::java::placeholder::PACKAGE, _jPackage);
-        content = utils::replaceAll(content, generator::java::placeholder::IMPORTS, getAllImports());
-        content = utils::replaceAll(content, generator::java::placeholder::CLASS_NAME, _jClassname);
-        content = utils::replaceAll(content, generator::java::placeholder::CLASS_BODY, getAllJavaFunctions());
+        content = utils::replaceAll(content, blueprints::placeholder::CUSTOM_CODE, getAllCustomJavaCode());
+        content = utils::replaceAll(content, blueprints::placeholder::java::PACKAGE, _jPackage);
+        content = utils::replaceAll(content, blueprints::placeholder::java::IMPORTS, getAllImports());
+        content = utils::replaceAll(content, blueprints::placeholder::CLASSNAME, _jClassname);
+        content = utils::replaceAll(content, blueprints::placeholder::CLASSBODY, getAllJavaFunctions());
 
         utils::createFile(filename, content, fullPath);
     }

@@ -18,8 +18,8 @@ namespace cppJify::mapper {
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
                 return JIFY_FMT(
                     JIFY_RAW(
-                        const char* c_str{} = env->GetStringUTFChars({}, nullptr);
-                        \n\t\t{} = std::string(c_str{});
+                        \n\t\tconst char* c_str{} = env->GetStringUTFChars({}, nullptr);
+                        \n\t\tstd::string {} = std::string(c_str{});
                         \n\t\tenv->ReleaseStringUTFChars({}, c_str{});
 
                     ),
@@ -47,8 +47,8 @@ namespace cppJify::mapper {
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
                 return JIFY_FMT(
                     JIFY_RAW(
-                        const char* c_str{} = env->GetStringUTFChars({}, nullptr);
-                        \n\t\t{} = std::string(c_str{});
+                        \n\t\tconst char* c_str{} = env->GetStringUTFChars({}, nullptr);
+                        \n\t\tstd::string {} = std::string(c_str{});
                         \n\t\tenv->ReleaseStringUTFChars({}, c_str{});
  
                     ),
@@ -78,8 +78,8 @@ namespace cppJify::mapper {
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
                 return JIFY_FMT(
                     JIFY_RAW(
-                        const char* c_str{} = env->GetStringUTFChars({}, nullptr);
-                        \n\t\t{} = std::string(c_str{});
+                        \n\t\tconst char* c_str{} = env->GetStringUTFChars({}, nullptr);
+                        \n\t\tstd::string {} = std::string(c_str{});
                         \n\t\tenv->ReleaseStringUTFChars({}, c_str{});
  
                     ),
@@ -107,8 +107,8 @@ namespace cppJify::mapper {
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
                 return JIFY_FMT(
                     JIFY_RAW(
-                        const char* c_str{} = env->GetStringUTFChars({}, nullptr);
-                        \n\t\t{} = std::string(c_str{});
+                        \n\t\tconst char* c_str{} = env->GetStringUTFChars({}, nullptr);
+                        \n\t\tstd::string {} = std::string(c_str{});
                         \n\t\tenv->ReleaseStringUTFChars({}, c_str{});
  
                     ),
