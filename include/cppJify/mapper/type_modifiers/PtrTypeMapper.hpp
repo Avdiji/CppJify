@@ -13,8 +13,13 @@ namespace cppJify::mapper {
             static const std::string JniType() { return JifyMapper<T>::JniType(); }
             static const std::string JavaType() { return JifyMapper<T>::JavaType(); }
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                return JIFY_FMT(JIFY_RAW(
-                        \n\t\t{} {} = cppJify::helper::cppJifyObjectToPtr<{}>(env, {});), CType(), cVar, JifyMapper<T>::CType(), jniVar);
+                // clang-format off
+                return JIFY_FMT(
+                    JIFY_RAW(
+                        \n\t\tcppJify::helper::CppJifyPtrWrapper<{}> *{} = cppJify::helper::cppJifyObjectToPtr<{}>(env, {});
+                    ),
+                    JifyMapper<T>::CType(), cVar, JifyMapper<T>::CType(), jniVar);
+                // clang-format on
             }
 
             static const std::string Out(const std::string& functionCall) {
@@ -23,10 +28,13 @@ namespace cppJify::mapper {
 
                 return JIFY_FMT(
                     JIFY_RAW(
+
                         {} result = {};
-                        \n\t\treturn cppJify::helper::ptrToCppJifyObject(env, "{}", result);
+                        \n\t\tcppJify::helper::CppJifyPtrWrapper<{}> *resultWrapper = new cppJify::helper::CppJifyPtrWrapper<{}>(result);
+                        \n\t\treturn cppJify::helper::ptrToCppJifyObject(env, "{}", resultWrapper);
                     ),
                     CType(), functionCall,
+                    JifyMapper<T>::CType(), JifyMapper<T>::CType(),
                     fullJName
                 );
                 // clang-format on
@@ -40,8 +48,13 @@ namespace cppJify::mapper {
             static const std::string JniType() { return JifyMapper<T>::JniType(); }
             static const std::string JavaType() { return JifyMapper<T>::JavaType(); }
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
-                return JIFY_FMT(JIFY_RAW(
-                        \n\t\t{} {} = cppJify::helper::cppJifyObjectToPtr<{}>(env, {});), CType(), cVar, JifyMapper<T>::CType(), jniVar);
+                // clang-format off
+                return JIFY_FMT(
+                    JIFY_RAW(
+                        \n\t\tcppJify::helper::CppJifyPtrWrapper<const {}> *{} = cppJify::helper::cppJifyObjectToPtr<const {}>(env, {});
+                    ),
+                    JifyMapper<T>::CType(), cVar, JifyMapper<T>::CType(), jniVar);
+                // clang-format on
             }
 
             static const std::string Out(const std::string& functionCall) {
@@ -50,10 +63,13 @@ namespace cppJify::mapper {
 
                 return JIFY_FMT(
                     JIFY_RAW(
+
                         {} result = {};
-                        \n\t\treturn cppJify::helper::ptrToCppJifyObject(env, "{}", result);
+                        \n\t\tcppJify::helper::CppJifyPtrWrapper<const {}> *resultWrapper = new cppJify::helper::CppJifyPtrWrapper<const {}>(result);
+                        \n\t\treturn cppJify::helper::ptrToCppJifyObject(env, "{}", resultWrapper);
                     ),
                     CType(), functionCall,
+                    JifyMapper<T>::CType(), JifyMapper<T>::CType(),
                     fullJName
                 );
                 // clang-format on
