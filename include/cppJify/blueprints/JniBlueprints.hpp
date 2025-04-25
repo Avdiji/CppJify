@@ -15,40 +15,11 @@ namespace cppJify::blueprints::jni {
 
     // clang-format off
 
-    // The base-file, which will be included into every generated jni file...
-    inline const std::string JIFY_BLUEPRINT_JNI_CPPJIFY_BASE = JIFY_RAW(
-        {pragmaonce}
-
-        \n\n#include <jni.h>
-        \n\n#include <string>
-
-        \n\nnamespace cppJify::helper {
-
-            \n\n\ttemplate <typename T>
-            \n\tinline T* cppJifyObjectToPtr(JNIEnv* env, jobject obj) 
-            \n\t{
-                \n\t\tjclass cls = env->GetObjectClass(obj);
-                \n\t\tjmethodID mid = env->GetMethodID(cls, "getNativeHandle", "()J");
-                \n\t\treturn reinterpret_cast<T*>(env->CallLongMethod(obj, mid));
-            \n\t}
-            
-            \n\n\ttemplate <typename T>
-            \n\tinline jobject ptrToCppJifyObject(JNIEnv* env, const std::string &classname, T* ptr)
-            \n\t{
-                \n\t\tjclass cls = env->FindClass(classname.c_str());
-                \n\t\tjmethodID constructor = env->GetMethodID(cls, "<init>", "(J)V");
-                \n\t\treturn env->NewObject(cls, constructor, reinterpret_cast<jlong>(ptr));
-            \n\t}
-        \n}
-    );
-
-
     // Base for every generated JNI-file
     inline const std::string JIFY_BLUEPRINT_JNI_BASE = JIFY_RAW(
         {pragmaonce}
     
         \n\n#include <jni.h>
-        \n#include "{cppjify_base_include_path}"
         \n\n{includes}
     
         \n\nextern "C" {
@@ -90,7 +61,8 @@ namespace cppJify::blueprints::jni {
             {conversions_in}
 
             \n\n\t\t{calling_type} *nativeObject = new {calling_type}({params_no_type});
-            \n\t\tjlong nativeHandle = reinterpret_cast<jlong>(nativeObject);
+            \n\t\tcppJify::helper::CppJifyPtrWrapper<{calling_type}>* nativeObjectWrapper = new cppJify::helper::CppJifyPtrWrapper<{calling_type}>(nativeObject, true);
+            \n\t\tjlong nativeHandle = reinterpret_cast<jlong>(nativeObjectWrapper);
             \n\t\treturn nativeHandle;
         \n\t}
     );

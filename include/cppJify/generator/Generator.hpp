@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cppJify/helper/Helper.hpp>
 #include <string>
 #include <vector>
 
@@ -46,14 +47,14 @@ namespace cppJify::generator {
      *
      * @tparam Params The parameter types of the function.
      * @param counterStart The starting id of the paramname [DEFAULT = 0]
-     * 
+     *
      * @return A vector of JniParam structures.
      */
     template <class... Params>
     const std::vector<FunctionParam> generateParams(const int& counterStart = 0) {
         std::vector<FunctionParam> params;
         int counter = counterStart;
-        (params.push_back(generateParam<Params>(counter++)), ...);
+        (params.push_back(generateParam<Params, helper::is_unique_ptr<std::decay_t<Params>>::value>(counter++)), ...);
         return params;
     }
 
@@ -66,14 +67,15 @@ namespace cppJify::generator {
      * @param counter The index of the parameter.
      * @return A JniParam instance representing the parameter.
      */
-    template <class Param>
+    template <class Param, bool Move = false>
     const FunctionParam generateParam(const int& counter) {
         // JNI
         const std::string paramName = "arg" + std::to_string(counter);
         const std::string paramType = mapper::JifyMapper<Param>::JniType();
 
         // C
-        const std::string c_paramName = "c" + paramName;
+        std::string c_paramName = "c" + paramName;
+        if (Move) { c_paramName = "std::move(" + c_paramName + ")"; }
         const std::string c_paramType = mapper::JifyMapper<Param>::CType();
 
         // Java
@@ -92,9 +94,9 @@ namespace cppJify::generator {
      * @tparam JNI_STYLE Whether to use JNI style naming.
      * @tparam WITH_TYPE Whether to include the type in the parameter list.
      * @tparam Params The parameter types of the function.
-     * 
+     *
      * @param counterStart The starting id of the param-names [DEFAULT = 0]
-     * 
+     *
      * @return A formatted parameter list as a string.
      */
     template <LANGUAGE_TYPE TYPE, bool WITH_TYPE, class... Params>

@@ -32,6 +32,7 @@ function(create_jify_jar target_name jar_name output_dir)
     # Generate Library, which creates a static lib from the generated Cpp files
     if(JNI_SRC_FILES AND JAVA_SRC_FILES)
         add_library(${target_name} SHARED ${JNI_SRC_FILES})
+        target_link_libraries(${target_name} PRIVATE CppJify)
         target_link_libraries(${target_name} PRIVATE ${link_targets})
 
         set_target_properties(${target_name} PROPERTIES

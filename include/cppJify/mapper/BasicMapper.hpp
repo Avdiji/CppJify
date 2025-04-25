@@ -13,3 +13,6 @@
 
 #include <cppJify/mapper/type_modifiers/PtrTypeMapper.hpp>
 #include <cppJify/mapper/type_modifiers/RefTypeMapper.hpp>
+
+#include <cppJify/mapper/smart_ptrs/SharedPtrMapper.hpp>
+#include <cppJify/mapper/smart_ptrs/UniquePtrMapper.hpp>

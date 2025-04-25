@@ -300,7 +300,7 @@ namespace cppJify::generator::jni {
         result = utils::replaceAll(result, blueprints::placeholder::jni::CALLING_TYPE_CONVERSION_IN, callingTypeConversion);
 
         // generate return value of the passed returntype
-        const std::string functionCall = callingParam.c_paramName + "->" + cppFunctionName + "(" +
+        const std::string functionCall = callingParam.c_paramName + "->get()->" + cppFunctionName + "(" +
                                          generateParamList<LANGUAGE_TYPE::C, false, Params...>(paramCounter) + ")";
 
         // JNI -> C++ conversions for all other parameter

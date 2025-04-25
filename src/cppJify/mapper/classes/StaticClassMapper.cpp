@@ -47,20 +47,12 @@ namespace cppJify::mapper::classes {
         const std::string packagePath = "/" + utils::replaceAll(_jPackage, ".", "/");
         const std::string fullPath = outputBase + packagePath;
 
-        // compute the relative path to the CppJifyBase jni file
-        const unsigned int pathSubdirCount = utils::countSubstringInString(packagePath, "/");
-        std::string cppjifyBaseJniPath;
-
-        for (unsigned int i = 0; i < pathSubdirCount; ++i) { cppjifyBaseJniPath.append("../"); }
-        cppjifyBaseJniPath.append("internal/" + CPP_JIFY_BASE_JNI_FILENAME);
-
         // create filename
         const std::string filename = _jClassname + ".cppjify" + ".cpp";
 
         // compose all mapped jni-functions
         std::string content = blueprints::jni::JIFY_BLUEPRINT_JNI_BASE;
         content = utils::replaceAll(content, blueprints::placeholder::jni::PRAGMAONCE, "#pragma once");
-        content = utils::replaceAll(content, blueprints::placeholder::jni::CPPJIFY_BASE_INCLUDE_PATH, cppjifyBaseJniPath);
         content = utils::replaceAll(content, blueprints::placeholder::jni::INCLUDES, getAllIncludes());
         content = utils::replaceAll(content, blueprints::placeholder::CUSTOM_CODE, getAllCustomJniCode());
         content = utils::replaceAll(content, blueprints::placeholder::BODY, getAllJniFunctions());
