@@ -2,6 +2,7 @@ add_subdirectory(blueprints)
 add_subdirectory(mapper)
 add_subdirectory(generator)
 add_subdirectory(utils)
+add_subdirectory(helper)
 
 target_sources(
         ${CPP_JIFY}
