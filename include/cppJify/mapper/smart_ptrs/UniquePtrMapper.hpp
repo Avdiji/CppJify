@@ -32,7 +32,7 @@ namespace cppJify::mapper {
                     JIFY_RAW(
 
                         {} result = {};
-                        \n\t\tcppJify::helper::CppJifyPtrWrapper<{}> *resultWrapper = new cppJify::helper::CppJifyPtrWrapper<{}>(result, true);
+                        \n\t\tcppJify::helper::CppJifyPtrWrapper<{}> *resultWrapper = new cppJify::helper::CppJifyPtrWrapper<{}>(std::move(result), true);
                         \n\t\treturn cppJify::helper::ptrToCppJifyObject(env, "{}", resultWrapper);
                     ),
                     CType(), functionCall,
@@ -67,7 +67,7 @@ namespace cppJify::mapper {
                     JIFY_RAW(
 
                         {} result = {};
-                        \n\t\tcppJify::helper::CppJifyPtrWrapper<{}> *resultWrapper = new cppJify::helper::CppJifyPtrWrapper<{}>(result, true);
+                        \n\t\tcppJify::helper::CppJifyPtrWrapper<{}> *resultWrapper = new cppJify::helper::CppJifyPtrWrapper<{}>(std::move(result), true);
                         \n\t\treturn cppJify::helper::ptrToCppJifyObject(env, "{}", resultWrapper);
                     ),
                     CType(), functionCall,
@@ -95,21 +95,7 @@ namespace cppJify::mapper {
             }
 
             static const std::string Out(const std::string& functionCall) {
-                // clang-format off
-                const std::string fullJName = utils::replaceAll(JavaType(), ".", "/");
-
-                return JIFY_FMT(
-                    JIFY_RAW(
-
-                        {} result = {};
-                        \n\t\tcppJify::helper::CppJifyPtrWrapper<{}> *resultWrapper = new cppJify::helper::CppJifyPtrWrapper<{}>(result, true);
-                        \n\t\treturn cppJify::helper::ptrToCppJifyObject(env, "{}", resultWrapper);
-                    ),
-                    CType(), functionCall,
-                    JifyMapper<T>::CType(), JifyMapper<T>::CType(),
-                    fullJName
-                );
-                // clang-format on
+                return "// returning a const std::unique_ptr<T>& makes no sense, consider adjusting your code.\n\t\treturn nullptr;";
             }
     };
 
