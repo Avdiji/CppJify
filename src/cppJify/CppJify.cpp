@@ -1,10 +1,7 @@
 #include <cppJify/CppJify.hpp>
 #include <cppJify/blueprints/JavaBlueprints.hpp>
-#include <cppJify/blueprints/JniBlueprints.hpp>
-#include <cppJify/blueprints/Placeholder.hpp>
 #include <cppJify/mapper/classes/StaticClassMapper.hpp>
 #include <cppJify/utils/FilesystemUtils.hpp>
-#include <cppJify/utils/StringUtils.hpp>
 #include <memory>
 #include <string>
 
