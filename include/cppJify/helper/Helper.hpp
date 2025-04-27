@@ -8,13 +8,21 @@
 
 namespace cppJify::helper {
 
-    // Primary template: default is false
+	template <typename FunctionType>
+	struct RemoveFirstArg;
+	
+	template <typename Ret, typename FirstArg, typename... Args>
+	struct RemoveFirstArg<Ret(FirstArg, Args...)> {
+		using type = Ret(Args...);  // Remove FirstArg from the function signature
+	};
+
+    ///////////////////////////////////////////////
+    // Checker determines whether T is a unique_ptr
     template <typename T>
     struct is_unique_ptr : std::false_type {};
-
-    // Specialization for std::unique_ptr
     template <typename T>
     struct is_unique_ptr<std::unique_ptr<T>> : std::true_type {};
+    ///////////////////////////////////////////////
 
     // clang-format off
 	template<class T> 

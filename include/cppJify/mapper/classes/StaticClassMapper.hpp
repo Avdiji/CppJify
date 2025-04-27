@@ -1,11 +1,13 @@
 #pragma once
 
+#include <boost/callable_traits.hpp>
 #include <cppJify/generator/JavaGenerator.hpp>
 #include <cppJify/generator/JniGenerator.hpp>
 #include <filesystem>
+#include <iostream>
 #include <set>
 #include <string>
-
+#include <utility>
 namespace cppJify {
 
     const inline std::string CPP_JIFY_BASE_JNI_FILENAME = "CppJifyBase.cppjify.cpp";
@@ -101,6 +103,27 @@ namespace cppJify {
                         generator::java::generateFunctionSignature<true, true, ReturnType, Params...>(jFunctionName, accessSpecifier));
 
                     return *this;
+                }
+
+                template <class Callable>
+                StaticClassMapper& mapStaticFunction(const std::pair<Callable, std::string>& callable,
+                                                     const std::string& cppFunctionName,
+                                                     const std::string& jFunctionName,
+                                                     const std::string& accessSpecifier = "public") {
+                    // Extract the corresponding FunctionTypes
+                    using FunctionType = boost::callable_traits::function_type_t<std::decay_t<Callable>>;
+                    using ReturnType = boost::callable_traits::return_type_t<FunctionType>;
+                    using FunctionPointerType = std::add_pointer_t<FunctionType>;
+
+                    // Build the Function from the passed lambda (in order to be able to use it in JNI)
+                    // clang-format off
+                    const std::string funcWithoutCapture = utils::replaceAll(callable.second, "[]", "");
+                    const std::string lambdaFunction = JIFY_FMT(JIFY_RAW(\n\tstatic {} {} {}), JifyMapper<ReturnType>::CType(), cppFunctionName, funcWithoutCapture);
+                    // clang-format on
+
+                    appendCustomJniCode(lambdaFunction);
+
+                    return mapStaticFunction(FunctionPointerType(nullptr), cppFunctionName, jFunctionName, accessSpecifier);
                 }
 
             protected:

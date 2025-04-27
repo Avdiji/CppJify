@@ -6,7 +6,9 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/include include)
 include(${CMAKE_SOURCE_DIR}/cmake/install/CppJifyInstall.cmake)
 
 find_package(fmt REQUIRED)
+find_package(Boost REQUIRED)
 target_link_libraries(${CPP_JIFY} fmt::fmt)
+target_link_libraries(${CPP_JIFY} Boost::boost)
 
 add_subdirectory(mapper)
 add_subdirectory(utils)

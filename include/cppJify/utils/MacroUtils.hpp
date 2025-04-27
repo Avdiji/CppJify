@@ -2,6 +2,10 @@
 
 #include <fmt/core.h>
 
+#include <utility>
+
+#define JIFY_LAMBDA(lambda) std::make_pair(lambda, std::string(#lambda))
+
 /**
  * Macro returns a exact string-reflection of whatever is being inserted.
  */
@@ -16,4 +20,3 @@
  * Macro can be used to pass overloaded function to the CppJifyMapper.
  */
 #define JIFY_OVERLOADED_FUNC(ReturnType, FUNC, ...) static_cast<ReturnType (*)(__VA_ARGS__)>(FUNC)
-
