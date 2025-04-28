@@ -232,8 +232,10 @@ namespace cppJify::generator::jni {
 
         // handle arrays
         const unsigned int arrayDimensions = utils::countSubstringInString(mangledName, "[]");
+        
         mangledName = utils::replaceAll(mangledName, "[]", "");
         auto it = primitiveJToJNITypeMap.find(mangledName);
+
         for (int i = 0; i < arrayDimensions; ++i) { mangledName = "_3" + mangledName; }
 
         // Check for primitive type
