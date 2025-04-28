@@ -66,7 +66,7 @@ namespace cppJify::mapper {
              */
             static const std::string In(const std::string& cVar, const std::string& jniVar, const std::string& id) {
                 return JIFY_FMT(JIFY_RAW(
-                        \n\t\tcppJify::helperCppJifyPtrWrapper<{}> {} = *cppJify::helper::cppJifyObjectToPtr<{}>(env, {});), CType(), cVar, CType(), jniVar);
+                        \n\t\t{} {} = *(cppJify::helper::cppJifyObjectToPtr<{}>(env, {})->get());), CType(), cVar, CType(), jniVar);
             }
 
             /**

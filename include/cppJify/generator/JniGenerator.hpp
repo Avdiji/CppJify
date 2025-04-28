@@ -227,17 +227,22 @@ namespace cppJify::generator::jni {
                                                                                      {"char", "C"}, {"short", "S"},   {"int", "I"},
                                                                                      {"long", "J"}, {"float", "F"},   {"double", "D"}};
 
+        // get the unmangled typename
         std::string mangledName = mapper::JifyMapper<Param>::JavaType();
+
+        // handle arrays
+        const unsigned int arrayDimensions = utils::countSubstringInString(mangledName, "[]");
+        mangledName = utils::replaceAll(mangledName, "[]", "");
         auto it = primitiveJToJNITypeMap.find(mangledName);
+        for (int i = 0; i < arrayDimensions; ++i) { mangledName = "_3" + mangledName; }
 
         // Check for primitive type
-        if (it != primitiveJToJNITypeMap.end()) { return it->second; }
+        if (it != primitiveJToJNITypeMap.end()) { return utils::replaceAll(mangledName, it->first, it->second); }
 
         // handle objects
         mangledName = "L" + utils::replaceAll(mangledName, ".", "_");
         mangledName.append("_2");
 
-        // TODO handle arrays...
         return mangledName;
     }
     //////////////////////////////////////// FUNCTION SIGNATURE ////////////////////////////////////////

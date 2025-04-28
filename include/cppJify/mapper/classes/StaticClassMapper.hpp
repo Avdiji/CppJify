@@ -1,11 +1,13 @@
 #pragma once
 
+#include <boost/callable_traits.hpp>
 #include <cppJify/generator/JavaGenerator.hpp>
 #include <cppJify/generator/JniGenerator.hpp>
 #include <filesystem>
+#include <iostream>
 #include <set>
 #include <string>
-
+#include <utility>
 namespace cppJify {
 
     const inline std::string CPP_JIFY_BASE_JNI_FILENAME = "CppJifyBase.cppjify.cpp";
@@ -86,6 +88,7 @@ namespace cppJify {
                  *
                  * @param cppFunctionName The actual name of the cpp function to be mapped.
                  * @param jFunctionName The name of the generated java function.
+                 * @param accessSpecifier The access specifier of the generated java function [DEFAULT = public].
                  */
                 template <class ReturnType, class... Params>
                 StaticClassMapper& mapStaticFunction(ReturnType (*func)(Params...),
@@ -101,6 +104,39 @@ namespace cppJify {
                         generator::java::generateFunctionSignature<true, true, ReturnType, Params...>(jFunctionName, accessSpecifier));
 
                     return *this;
+                }
+
+                /**
+                 * @brief Map non-member functions with a LAMBDA.
+                 * @note This function is only meant to be used with a lambda and the JIFY_LAMBDA macro, using it otherwhise will result in
+                 * undefined behaviour.
+                 *
+                 * @tparam Callable The lambda.
+                 *
+                 * @param cppFunctionName The actual name of the cpp function to be mapped.
+                 * @param jFunctionName The name of the generated java function.
+                 * @param accessSpecifier The access specifier of the generated java function.
+                 *
+                 */
+                template <class Callable>
+                StaticClassMapper& mapStaticFunction(const std::pair<Callable, std::string>& callable,
+                                                     const std::string& cppFunctionName,
+                                                     const std::string& jFunctionName,
+                                                     const std::string& accessSpecifier = "public") {
+                    // Extract the corresponding FunctionTypes
+                    using FunctionType = boost::callable_traits::function_type_t<std::decay_t<Callable>>;
+                    using ReturnType = boost::callable_traits::return_type_t<FunctionType>;
+                    using FunctionPointerType = std::add_pointer_t<FunctionType>;
+
+                    // Build the Function from the passed lambda (in order to be able to use it in JNI)
+                    // clang-format off
+                    const std::string funcWithoutCapture = utils::replaceAll(callable.second, "[]", "");
+                    const std::string lambdaFunction = JIFY_FMT(JIFY_RAW(\n\tstatic {} {} {}), JifyMapper<ReturnType>::CType(), cppFunctionName, funcWithoutCapture);
+                    // clang-format on
+
+                    appendCustomJniCode(lambdaFunction);
+
+                    return mapStaticFunction(FunctionPointerType(nullptr), cppFunctionName, jFunctionName, accessSpecifier);
                 }
 
             protected:
