@@ -83,6 +83,18 @@ namespace cppJify::mapper::classes {
                 return *this;
             }
 
+            /**
+             * @brief Map member functions with a LAMBDA.
+             * @note This function is only meant to be used with a lambda and the JIFY_LAMBDA macro, using it otherwhise will result in
+             * undefined behaviour.
+             *
+             * @tparam Callable The lambda.
+             *
+             * @param cppFunctionName The actual name of the cpp function to be mapped.
+             * @param jFunctionName The name of the generated java function.
+             * @param accessSpecifier The access specifier of the generated java function.
+             *
+             */
             template <class Callable>
             InstanceClassMapper<T>& mapFunction(const std::pair<Callable, std::string>& callable,
                                                 const std::string& cppFunctionName,
@@ -123,12 +135,24 @@ namespace cppJify::mapper::classes {
             }
 
         private:
+            /**
+             * @brief Helper function maps a member function using a lambda.
+             *
+             * @tparam ReturnType The return type used for the generated signature.
+             * @tparam Params The parameter types, used to build the jni signature.
+             * @tparam ReturnTypeBody The Return type, used to build the jni functions body.
+             * @tparam ParamsBody The parameter types, used to build the jni function body.
+             *
+             * @param cppFunctionName The actual name of the cpp function to be mapped.
+             * @param jFunctionName The name of the generated java function.
+             * @param accessSpecifier The access specifier of the generated java function.
+             */
             template <class ReturnType, class... Params, class ReturnTypeBody, class... ParamsBody>
             InstanceClassMapper<T>& mapLambdaFunction(ReturnType (*func)(Params...),
                                                       ReturnTypeBody (*funcBody)(ParamsBody...),
                                                       const std::string& cppFunctionName,
                                                       const std::string& jFunctionName,
-                                                      const std::string& accessSpecifier = "public") {
+                                                      const std::string& accessSpecifier) {
                 const std::string signature =
                     generator::jni::generateFunctionSignature<T, ReturnType, Params...>(jFunctionName, _jPackage, _jClassname);
                 const std::string body = generator::jni::generateStaticFunctionBody<ReturnTypeBody, ParamsBody...>(cppFunctionName);

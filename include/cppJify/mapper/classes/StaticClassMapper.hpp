@@ -88,6 +88,7 @@ namespace cppJify {
                  *
                  * @param cppFunctionName The actual name of the cpp function to be mapped.
                  * @param jFunctionName The name of the generated java function.
+                 * @param accessSpecifier The access specifier of the generated java function [DEFAULT = public].
                  */
                 template <class ReturnType, class... Params>
                 StaticClassMapper& mapStaticFunction(ReturnType (*func)(Params...),
@@ -105,6 +106,18 @@ namespace cppJify {
                     return *this;
                 }
 
+                /**
+                 * @brief Map non-member functions with a LAMBDA.
+                 * @note This function is only meant to be used with a lambda and the JIFY_LAMBDA macro, using it otherwhise will result in
+                 * undefined behaviour.
+                 *
+                 * @tparam Callable The lambda.
+                 *
+                 * @param cppFunctionName The actual name of the cpp function to be mapped.
+                 * @param jFunctionName The name of the generated java function.
+                 * @param accessSpecifier The access specifier of the generated java function.
+                 *
+                 */
                 template <class Callable>
                 StaticClassMapper& mapStaticFunction(const std::pair<Callable, std::string>& callable,
                                                      const std::string& cppFunctionName,
